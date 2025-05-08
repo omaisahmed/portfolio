@@ -1,0 +1,74 @@
+'use client'
+
+import Link from 'next/link'
+import Image from 'next/image'
+
+export default function Footer() {
+  return (
+    <footer className="py-8" style={{ background: 'var(--background-color-2)' }}>
+      <div className="max-w-6xl mx-auto px-4">
+        <div 
+          className="p-8 rounded-lg text-center"
+          style={{
+            background: 'var(--background-color-1)',
+            boxShadow: 'var(--shadow-1)',
+            fontFamily: 'var(--font-primary)'
+          }}
+        >
+          <div className="mb-6">
+            <Link href="/" className="text-2xl font-bold" style={{ color: 'var(--color-heading)' }}>
+              <Image 
+                src="/assets/images/logo.png" 
+                alt="Logo" 
+                width={120} 
+                height={40}
+                className="object-contain mx-auto"
+                priority
+              />
+            </Link>
+          </div>
+          <div className="flex justify-center space-x-6 mb-6">
+            <Link 
+              href="#services"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400"
+              style={{ color: 'var(--color-lightn)' }}
+            >
+              Services
+            </Link>
+            <Link 
+              href="#portfolio"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400"
+              style={{ color: 'var(--color-lightn)' }}
+            >
+              Portfolio
+            </Link>
+            <Link 
+              href="#resume"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400"
+              style={{ color: 'var(--color-lightn)' }}
+            >
+              Resume
+            </Link>
+            <Link 
+              href="#testimonials"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400"
+              style={{ color: 'var(--color-lightn)' }}
+            >
+              Testimonials
+            </Link>
+            <Link 
+              href="#contact"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400"
+              style={{ color: 'var(--color-lightn)' }}
+            >
+              Contact
+            </Link>
+          </div>
+          <p style={{ color: 'var(--color-body)' }}>
+            © {new Date().getFullYear()}. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}

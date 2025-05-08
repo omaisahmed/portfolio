@@ -1,0 +1,60 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
+interface Service {
+  id: string
+  title: string
+  description: string
+  icon: string
+}
+
+export default function Services() {
+  const [services, setServices] = useState<Service[]>([])
+
+  useEffect(() => {
+    fetch('/api/services')
+      .then(res => res.json())
+      .then(data => setServices(data))
+      .catch(error => console.error('Error fetching services:', error))
+  }, [])
+
+  return (
+    <section id="services" className="py-20" style={{ background: 'var(--background-color-2)' }}>
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <span className="text-lg mb-4 block" style={{ color: 'var(--color-subtitle)', fontFamily: 'var(--font-primary)' }}>
+            What Do I Do
+          </span>
+          <h2 className="text-4xl font-bold" style={{ color: 'var(--color-heading)', fontFamily: 'var(--font-secondary)' }}>
+            Services
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <div
+              key={service.id}
+              className="p-8 rounded-lg transition-all duration-400 hover:translate-y-[-10px]"
+              style={{
+                background: 'var(--background-color-1)',
+                boxShadow: 'var(--shadow-1)',
+                fontFamily: 'var(--font-primary)'
+              }}
+            >
+              <div className="text-4xl mb-4" style={{ color: 'var(--color-primary)' }}>
+                {service.icon}
+              </div>
+              <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--color-heading)' }}>
+                {service.title}
+              </h3>
+              <p style={{ color: 'var(--color-body)' }}>
+                {service.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
