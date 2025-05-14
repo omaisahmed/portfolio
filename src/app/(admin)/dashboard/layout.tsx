@@ -1,8 +1,8 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
 import AdminHeader from '@/components/admin/Header'
 import AdminSidebar from '@/components/admin/Sidebar'
 import LoadingSpinner from '@/components/admin/LoadingSpinner'
@@ -18,16 +18,23 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login')
+      router.replace('/login')
     }
   }, [status, router])
 
+  // Show loading state while checking authentication
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner />
       </div>
     )
+  }
+
+  // Redirect if no session
+  if (!session) {
+    router.replace('/login')
+    return null
   }
 
   return (

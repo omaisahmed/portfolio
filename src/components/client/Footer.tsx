@@ -27,7 +27,7 @@ export default function Footer() {
               />
             </Link>
           </div>
-          <div className="flex justify-center space-x-6 mb-6">
+          <div className="flex flex-wrap justify-center gap-4 mb-6">
             <Link 
               href="#services"
               className="hover:text-[var(--color-primary)] transition-colors duration-400"

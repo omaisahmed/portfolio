@@ -5,7 +5,8 @@ export default withAuth({
     authorized: ({ token }) => !!token
   },
   pages: {
-    signIn: '/login'
+    signIn: '/login',
+    error: '/login' // Add error page redirection
   }
 })
 
