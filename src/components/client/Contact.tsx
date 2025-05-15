@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'  // Fix: Changed from 'next/link' to 'next/image'
 import Link from 'next/link'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 // Add EmailJS type declarations
 declare global {
@@ -21,11 +23,11 @@ declare global {
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    contact_name: '',
-    contact_email: '',
-    contact_phone: '',
-    contact_subject: '',
-    contact_message: ''
+    'contact-name': '',
+    'contact-email': '',
+    'contact-phone': '',
+    'subject': '',
+    'contact-message': ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -52,26 +54,60 @@ export default function Contact() {
     setIsSubmitting(true)
     
     try {
+      // Get the form element
+      const form = e.target as HTMLFormElement;
+      
+      // Create a parameters object with the actual values that match your email template
+      const templateParams = {
+        'contact-name': formData['contact-name'],
+        'contact-email': formData['contact-email'],
+        'contact-phone': formData['contact-phone'],
+        'subject': formData.subject,
+        'contact-message': formData['contact-message'],
+        'contact_number': Math.random() * 100000 | 0
+      };
+      
+      // Use sendForm with the form element
       await window.emailjs.sendForm(
-        'service_0ws32en',
-        'template_6un774i',
-        e.target as HTMLFormElement
-      )
+        'service_cdkuhe8',
+        'template_5v6jeg9',
+        form
+      );
+      
       setSubmitStatus('success')
       setFormData({
-        contact_name: '',
-        contact_email: '',
-        contact_phone: '',
-        contact_subject: '',
-        contact_message: ''
+        'contact-name': '',
+        'contact-email': '',
+        'contact-phone': '',
+        'subject': '',
+        'contact-message': ''
       })
-      window.location.href = 'https://omaisahmed.github.io/folio'
+      
+      // Show success toast without redirecting
+      toast.success('Message sent successfully!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });      
     } catch (error) {
       console.error('Error submitting form:', error)
       setSubmitStatus('error')
+      
+      // Show error toast
+      toast.error('Error sending message. Please try again.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      
     } finally {
       setIsSubmitting(false)
-      setTimeout(() => setSubmitStatus('idle'), 3000)
     }
   }
 
@@ -85,6 +121,19 @@ export default function Contact() {
   return (
     <section id="contact" className="py-20" style={{ background: 'var(--background-color-2)' }}>
       <div className="max-w-6xl mx-auto px-4">
+        {/* Add ToastContainer at the top level of your component */}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        
         <div className="text-center mb-12">
           <span className="text-lg mb-4 block" style={{ color: 'var(--color-subtitle)', fontFamily: 'var(--font-primary)' }}>
             Contact With Me
@@ -165,10 +214,10 @@ export default function Contact() {
                   <input
                     type="text"
                     id="contact-name"
-                    name="contact_name"
+                    name="contact-name"
                     placeholder="Your Name"
                     required
-                    value={formData.contact_name}
+                    value={formData['contact-name']}
                     onChange={handleChange}
                     className="w-full p-5 rounded-lg bg-[var(--background-color-2)] text-[var(--color-body)] border-2 border-[var(--background-color-1)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] transition-all duration-300 outline-none"
                     style={{ 
@@ -182,10 +231,10 @@ export default function Contact() {
                   <input
                     type="email"
                     id="contact-email"
-                    name="contact_email"
+                    name="contact-email"
                     placeholder="Your Email"
                     required
-                    value={formData.contact_email}
+                    value={formData['contact-email']}
                     onChange={handleChange}
                     className="w-full p-5 rounded-lg bg-[var(--background-color-2)] text-[var(--color-body)] border-2 border-[var(--background-color-1)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] transition-all duration-300 outline-none"
                     style={{ 
@@ -200,10 +249,10 @@ export default function Contact() {
                 <input
                   type="tel"
                   id="contact-phone"
-                  name="contact_phone"
+                  name="contact-phone"
                   placeholder="Phone Number"
                   required
-                  value={formData.contact_phone}
+                  value={formData['contact-phone']}
                   onChange={handleChange}
                   className="w-full p-5 rounded-lg bg-[var(--background-color-2)] text-[var(--color-body)] border-2 border-[var(--background-color-1)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] transition-all duration-300 outline-none"
                   style={{ 
@@ -217,10 +266,10 @@ export default function Contact() {
                 <input
                   type="text"
                   id="subject"
-                  name="contact_subject"
+                  name="subject"
                   placeholder="Subject"
                   required
-                  value={formData.contact_subject}
+                  value={formData.subject}
                   onChange={handleChange}
                   className="w-full p-5 rounded-lg bg-[var(--background-color-2)] text-[var(--color-body)] border-2 border-[var(--background-color-1)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] transition-all duration-300 outline-none"
                   style={{ 
@@ -233,10 +282,10 @@ export default function Contact() {
               <div>
                 <textarea
                   id="contact-message"
-                  name="contact_message"
+                  name="contact-message"
                   placeholder="Your Message"
                   required
-                  value={formData.contact_message}
+                  value={formData['contact-message']}
                   onChange={handleChange}
                   rows={5}
                   className="w-full p-5 rounded-lg bg-[var(--background-color-2)] text-[var(--color-body)] border-2 border-[var(--background-color-1)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] transition-all duration-300 outline-none"

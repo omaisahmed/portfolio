@@ -138,7 +138,7 @@ export default function Header() {
                 className="hover:text-[var(--color-primary)] transition-colors duration-400"
                 style={{ color: 'var(--color-lightn)' }}
               >
-                Contact
+                Contact Me
               </Link>
             </div>
           </div>

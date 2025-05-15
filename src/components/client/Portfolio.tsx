@@ -63,14 +63,14 @@ export default function Portfolio() {
                 <p className="mb-4" style={{ color: 'var(--color-body)' }}>
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-4 project-tags">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
                       className="px-3 py-1 rounded-full text-sm"
                       style={{
                         background: 'var(--background-color-2)',
-                        color: 'var(--color-lightn)',
+                        color: 'var(--color-heading)',
                         boxShadow: 'var(--inner-shadow)'
                       }}
                     >
@@ -84,7 +84,19 @@ export default function Portfolio() {
                       href={project.liveUrl}
                       target="_blank"
                       className="hover:text-[var(--color-primary)] transition-colors duration-400"
-                      style={{ color: 'var(--color-lightn)' }}
+                      style={{
+                        color: 'var(--color-primary)',
+                        display: 'block',
+                        fontSize: '14px',
+                        padding: '0 15px',
+                        height: '36px',
+                        lineHeight: '36px',
+                        borderRadius: '6px',
+                        background: 'var(--background-color-1)',
+                        boxShadow: 'var(--shadow-1)',
+                        transition: 'var(--transition)',
+                        fontWeight: 500
+                      }}
                     >
                       Live Demo
                     </Link>
@@ -94,7 +106,19 @@ export default function Portfolio() {
                       href={project.githubUrl}
                       target="_blank"
                       className="hover:text-[var(--color-primary)] transition-colors duration-400"
-                      style={{ color: 'var(--color-lightn)' }}
+                      style={{
+                        color: 'var(--color-primary)',
+                        display: 'block',
+                        fontSize: '14px',
+                        padding: '0 15px',
+                        height: '36px',
+                        lineHeight: '36px',
+                        borderRadius: '6px',
+                        background: 'var(--background-color-1)',
+                        boxShadow: 'var(--shadow-1)',
+                        transition: 'var(--transition)',
+                        fontWeight: 500
+                      }}
                     >
                       Source Code
                     </Link>

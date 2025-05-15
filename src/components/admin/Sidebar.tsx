@@ -14,6 +14,8 @@ export default function AdminSidebar({ isSidebarOpen, onClose }: AdminSidebarPro
     { href: '/dashboard/projects', label: 'Projects' },
     { href: '/dashboard/services', label: 'Services' },
     { href: '/dashboard/testimonials', label: 'Testimonials' },
+    { href: '/dashboard/resume', label: 'Resume' },
+    { href: '/dashboard/contact', label: 'Contact' },
     { href: '/dashboard/profile', label: 'Profile' },
   ]
 
