@@ -71,3 +71,8 @@ body {
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 @import 'animate.css';
+
+/* Hide Next.js dev tools badge */
+[data-next-badge="true"] {
+  display: none !important;
+}

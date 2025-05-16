@@ -6,7 +6,7 @@ export default async function ProfilePage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Profile</h1>
+        <h1 className="text-2xl font-bold text-black">Profile</h1>
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -68,7 +68,7 @@ export default async function ProfilePage() {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              className="bg-[var(--color-subtitle)] text-white px-4 py-2 rounded-md hover:bg-[var(--color-subtitle)] hover:opacity-90"
             >
               Save Changes
             </button>

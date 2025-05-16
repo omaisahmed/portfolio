@@ -1,57 +1,52 @@
+'use client'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-interface AdminSidebarProps {
-  isSidebarOpen: boolean
-  onClose: () => void
+interface SidebarProps {
+  isOpen: boolean
 }
 
-export default function AdminSidebar({ isSidebarOpen, onClose }: AdminSidebarProps) {
+export default function Sidebar({ isOpen }: SidebarProps) {
   const pathname = usePathname()
 
-  const menuItems = [
-    { href: '/dashboard', label: 'Dashboard' },
-    { href: '/dashboard/projects', label: 'Projects' },
-    { href: '/dashboard/services', label: 'Services' },
-    { href: '/dashboard/testimonials', label: 'Testimonials' },
-    { href: '/dashboard/resume', label: 'Resume' },
-    { href: '/dashboard/contact', label: 'Contact' },
-    { href: '/dashboard/profile', label: 'Profile' },
+  const navItems = [
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Profile', href: '/dashboard/profile' },
+    { name: 'Services', href: '/dashboard/services' },
+    { name: 'Projects', href: '/dashboard/projects' },
+    { name: 'Testimonials', href: '/dashboard/testimonials' },
+    { name: 'Resume', href: '/dashboard/resume' },
+    { name: 'Contact', href: '/dashboard/contact' },
   ]
 
   return (
-    <aside className={`
-      fixed lg:static inset-y-0 left-0 transform 
-      ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      lg:translate-x-0 transition-transform duration-300 ease-in-out
-      w-64 bg-white shadow-md min-h-screen p-4 z-30
-    `}>
-      <div className="flex justify-end lg:hidden">
-        <button
-          onClick={onClose}
-          className="text-gray-600 hover:text-gray-900"
-        >
-          ✕
-        </button>
+    <aside
+      className={`bg-white shadow-md fixed inset-y-0 left-0 z-10 w-64 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
+      <div className="p-4">
+        <h2 className="text-xl font-bold mb-6 px-4 text-black">Admin Panel</h2>
+        <nav>
+          <ul className="space-y-2">
+            {navItems.map((item) => (
+              <li key={item.name}>
+                <Link
+                  href={item.href}
+                  className={`block px-4 py-2 rounded-md transition-colors ${
+                    pathname === item.href
+                      ? 'bg-[var(--color-subtitle)] text-white font-medium'
+                      : 'text-gray-600 hover:text-white hover:bg-[var(--color-subtitle)]'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-      <nav>
-        <ul className="space-y-2">
-          {menuItems.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={`block px-4 py-2 rounded-md ${
-                  pathname === item.href
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
     </aside>
   )
 }

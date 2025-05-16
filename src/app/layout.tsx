@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   keywords: "omais ahmed portfolio, omais ahmed github, omais portfolio, omais github, omaisahmed github, omais resume, omais developer, omais laravel developer, omais frontend developer, omais backend developer",
   viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
   icons: {
-    icon: 'assets/images/favicon.png'
+    icon: '/assets/images/favicon.png'
   }
 };
 

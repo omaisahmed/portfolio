@@ -179,10 +179,10 @@ export default function ResumePage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Resume Management</h1>
+        <h1 className="text-2xl font-bold text-black">Resume Management</h1>
         <button
           onClick={() => setIsAdding(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          className="bg-[var(--color-subtitle)] text-white px-4 py-2 rounded-md hover:bg-[var(--color-subtitle)] hover:opacity-90"
         >
           Add New Entry
         </button>
@@ -201,7 +201,7 @@ export default function ResumePage() {
               className={`
                 py-4 px-1 border-b-2 font-medium text-sm
                 ${activeTab === tab
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-[var(--color-subtitle)] text-[var(--color-subtitle)]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
               `}
             >

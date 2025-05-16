@@ -15,7 +15,7 @@ export default function Home() {
     animate: { y: 0, opacity: 1 },
     transition: { duration: 0.6 }
   }
-
+  
   return (
     <div className="min-h-screen">
       <Header />
