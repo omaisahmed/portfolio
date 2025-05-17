@@ -65,7 +65,7 @@ async function main() {
       {
         title: 'Portfolio Website',
         description: 'A modern portfolio website built with Next.js and Tailwind CSS',
-        imageUrl: '/projects/portfolio.png', // Updated image path
+        images: ['/projects/portfolio.png'], // This is correct format
         githubUrl: 'https://github.com/omaisahmed/portfolio',
         liveUrl: 'https://omaisahmed.github.io/folio/',
         tags: ['Next.js', 'React', 'Tailwind CSS']
@@ -73,7 +73,7 @@ async function main() {
       {
         title: 'Software Development Projects',
         description: 'Various software development projects showcasing different technologies and solutions',
-        imageUrl: '/projects/software.jpg',
+        images: ['/projects/software.jpg'], // This is correct format
         githubUrl: 'https://github.com/omaisahmed',
         tags: ['JavaScript', 'React', 'Node.js', 'Full Stack']
       }

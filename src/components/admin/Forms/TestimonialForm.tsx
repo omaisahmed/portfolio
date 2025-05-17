@@ -60,7 +60,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
           name="name"
           defaultValue={testimonial?.name}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dashboard-input"
         />
       </div>
 
@@ -71,7 +71,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
           name="location"
           defaultValue={testimonial?.location}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dashboard-input"
         />
       </div>
 
@@ -82,7 +82,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
           defaultValue={testimonial?.content}
           required
           rows={4}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dashboard-input"
         />
       </div>
 
@@ -94,7 +94,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
               key={star}
               type="button"
               onClick={() => setRating(star)}
-              className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+              className={`text-2xl cursor-pointer ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
             >
               ★
             </button>
@@ -102,13 +102,24 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-4">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
+          className="text-white px-4 py-2 rounded-md hover:opacity-90 transition-colors cursor-pointer"
+          style={{
+            background: 'var(--color-primary)',
+            opacity: loading ? 0.7 : 1
+          }}
         >
-          {loading ? 'Saving...' : 'Save Testimonial'}
+          {loading ? 'Saving...' : testimonial ? 'Update Testimonial' : 'Save Testimonial'}
         </button>
       </div>
     </form>

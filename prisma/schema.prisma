@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,6 +8,22 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id             String  @id @default(cuid())
+  name           String
+  title          String
+  bio            String
+  githubUrl      String?
+  linkedinUrl    String?
+  facebookUrl    String?
+  instagramUrl   String?
+  whatsappNumber String?
+  twitterUrl     String?
+  personalWebsite String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model User {
@@ -18,15 +37,15 @@ model User {
 }
 
 model Project {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String
-  imageUrl    String
+  images      String[] // Changed from imageUrl: String
   liveUrl     String?
   githubUrl   String?
   tags        String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Service {
@@ -34,18 +53,6 @@ model Service {
   title       String
   description String
   icon        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
-model Profile {
-  id          String    @id @default(cuid())
-  name        String
-  title       String
-  bio         String
-  resumeUrl   String?
-  githubUrl   String?
-  linkedinUrl String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

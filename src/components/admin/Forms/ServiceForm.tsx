@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 interface ServiceFormProps {
   service?: {
@@ -15,34 +16,56 @@ interface ServiceFormProps {
 export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    icon: ''
+  })
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (service) {
+      setFormData({
+        title: service.title,
+        description: service.description,
+        icon: service.icon
+      })
+    }
+  }, [service])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
-    const formData = new FormData(e.currentTarget)
-    const data = {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      icon: formData.get('icon')
-    }
-
     try {
-      const url = service ? `/api/services/${service.id}` : '/api/services'
+      const url = service 
+        ? `/api/services/${service.id}` 
+        : '/api/services'
+      
       const method = service ? 'PUT' : 'POST'
       
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       })
 
-      if (!response.ok) throw new Error('Failed to save service')
-      
+      if (!response.ok) {
+        throw new Error('Failed to save service')
+      }
+
+      toast.success(service ? 'Service updated successfully' : 'Service created successfully')
       router.push('/dashboard/services')
       router.refresh()
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error saving service:', error)
+      toast.error('Failed to save service')
     } finally {
       setLoading(false)
     }
@@ -50,47 +73,67 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Title</label>
-        <input
-          type="text"
-          name="title"
-          defaultValue={service?.title}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
+      <div className="grid grid-cols-1 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Service Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            placeholder="Enter service title"
+            className="dashboard-input"
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Icon (Emoji or Icon Code)
+          </label>
+          <input
+            type="text"
+            name="icon"
+            value={formData.icon}
+            onChange={handleChange}
+            required
+            placeholder="Enter icon or emoji (e.g., 💻 or ✨)"
+            className="dashboard-input"
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Description
+          </label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            placeholder="Enter service description"
+            rows={5}
+            className="dashboard-input"
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Description</label>
-        <textarea
-          name="description"
-          defaultValue={service?.description}
-          required
-          rows={4}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Icon</label>
-        <input
-          type="text"
-          name="icon"
-          defaultValue={service?.icon}
-          required
-          placeholder="Enter icon emoji or code"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
-      </div>
-
-      <div className="flex justify-end">
+      <div className="flex justify-end space-x-4">
+        <button
+          type="button"
+          onClick={() => router.push('/dashboard/services')}
+          className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 cursor-pointer"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
+          className="bg-[var(--color-subtitle)] text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity cursor-pointer"
         >
-          {loading ? 'Saving...' : 'Save Service'}
+          {loading ? 'Saving...' : service ? 'Update Service' : 'Save Service'}
         </button>
       </div>
     </form>

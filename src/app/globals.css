@@ -76,3 +76,1155 @@ body {
 [data-next-badge="true"] {
   display: none !important;
 }
+
+/* Dashboard Form Styles */
+.dashboard-input {
+  @apply block w-full px-4 py-3 text-base rounded-md border border-gray-300 shadow-sm;
+  @apply focus:border-[var(--color-subtitle)] focus:ring-[var(--color-subtitle)] focus:ring-2;
+  @apply bg-white text-gray-900;
+}
+
+.dashboard-label {
+  @apply block text-sm font-bold mb-2 text-gray-800;
+}
+
+.dashboard-button {
+  @apply bg-[var(--color-subtitle)] text-white px-6 py-3 text-base font-medium rounded-md;
+  @apply hover:bg-[var(--color-subtitle)] hover:opacity-90 transition-opacity cursor-pointer;
+}
+
+.dashboard-button {
+  @apply bg-[var(--color-subtitle)] text-white px-6 py-3 text-base font-medium rounded-md;
+  @apply hover:bg-[var(--color-subtitle)] hover:opacity-90 transition-opacity cursor-pointer;
+}
+
+/* Override default form element styling */
+input, textarea, select {
+  color: #333333 !important;
+  background-color: white !important;
+}
+
+/* Form field focus states */
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-subtitle) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(249, 0, 77, 0.2) !important;
+}
+
+/* Ensure text is visible in form fields */
+input::placeholder, textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Modal blur effect */
+.modal-open #dashboard-content,
+.modal-open main:not(:has(.fixed)) {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+.modal-open main:not(:has(.fixed)) {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+body.modal-open > div > main,
+body.modal-open #dashboard-content {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal blur effect */
+.modal-open #dashboard-content,
+.modal-open main:not(:has(.fixed)) {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+}
+.modal-open main:not(:has(.fixed)) {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+}
+
+/* Modal blur effect */
+.modal-open #dashboard-content,
+.modal-open main:not(:has(.fixed)) {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-out;
+}
+.modal-open main:not(:has(.fixed)) {
+  filter: blur(4px);
+  transition: filter 0.2s ease-in-
+}

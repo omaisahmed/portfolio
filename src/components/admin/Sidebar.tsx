@@ -30,20 +30,26 @@ export default function Sidebar({ isOpen }: SidebarProps) {
         <h2 className="text-xl font-bold mb-6 px-4 text-black">Admin Panel</h2>
         <nav>
           <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className={`block px-4 py-2 rounded-md transition-colors ${
-                    pathname === item.href
-                      ? 'bg-[var(--color-subtitle)] text-white font-medium'
-                      : 'text-gray-600 hover:text-white hover:bg-[var(--color-subtitle)]'
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.href === '/dashboard' 
+                ? pathname === '/dashboard'
+                : pathname.startsWith(item.href)
+              
+              return (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={`block px-4 py-2 rounded-md transition-colors ${
+                      isActive
+                        ? 'bg-[var(--color-subtitle)] text-white font-medium'
+                        : 'text-gray-600 hover:text-white hover:bg-[var(--color-subtitle)]'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </nav>
       </div>
