@@ -2,15 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 interface Education {
   id?: string
   institution: string
   degree: string
-  field: string
   startDate: string
   endDate: string
-  gpa?: string
 }
 
 interface Certification {
@@ -19,7 +18,6 @@ interface Certification {
   issuer: string
   issueDate: string
   expiryDate?: string
-  credentialId?: string
 }
 
 interface Skill {
@@ -33,7 +31,6 @@ interface Experience {
   id?: string
   title: string
   company: string
-  location: string
   startDate: string
   endDate: string
   current: boolean
@@ -49,7 +46,7 @@ interface ResumeFormProps {
 export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [skillLevel, setSkillLevel] = useState((data as Skill)?.level || 3)
+  const [skillLevel, setSkillLevel] = useState((data as Skill)?.level * 20 || 60)
   const [isCurrent, setIsCurrent] = useState((data as Experience)?.current || false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,12 +59,10 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
     switch (type) {
       case 'education':
         submitData = {
-          institution: formData.get('institution'),
-          degree: formData.get('degree'),
-          field: formData.get('field'),
-          startDate: formData.get('startDate'),
-          endDate: formData.get('endDate'),
-          gpa: formData.get('gpa')
+          institution: formData.get('institution')?.toString() || '',
+          degree: formData.get('degree')?.toString() || '',
+          startDate: formData.get('startDate')?.toString() || '',
+          endDate: formData.get('endDate')?.toString() || ''
         }
         break
 
@@ -76,15 +71,14 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name: formData.get('name'),
           issuer: formData.get('issuer'),
           issueDate: formData.get('issueDate'),
-          expiryDate: formData.get('expiryDate'),
-          credentialId: formData.get('credentialId')
+          expiryDate: formData.get('expiryDate')
         }
         break
 
       case 'skill':
         submitData = {
           name: formData.get('name'),
-          level: skillLevel,
+          level: Math.round(skillLevel / 20) || 1, // Ensure minimum level of 1
           category: formData.get('category')
         }
         break
@@ -93,9 +87,8 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
         submitData = {
           title: formData.get('title'),
           company: formData.get('company'),
-          location: formData.get('location'),
           startDate: formData.get('startDate'),
-          endDate: isCurrent ? 'Present' : formData.get('endDate'),
+          endDate: isCurrent ? null : formData.get('endDate'), // Change 'Present' to null
           current: isCurrent,
           description: formData.get('description')
         }
@@ -112,11 +105,17 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
         body: JSON.stringify(submitData)
       })
 
-      if (!response.ok) throw new Error(`Failed to save ${type}`)
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        throw new Error(responseData.error || `Failed to save ${type}`)
+      }
       
-      onSuccess?.() // Call the success callback after successful submission
+      toast.success(`${type} saved successfully!`)
+      onSuccess?.()
     } catch (error) {
       console.error('Error:', error)
+      toast.error(error instanceof Error ? error.message : `Failed to save ${type}`)
     } finally {
       setLoading(false)
     }
@@ -131,7 +130,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="institution"
           defaultValue={(data as Education)?.institution}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
 
@@ -142,18 +141,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="degree"
           defaultValue={(data as Education)?.degree}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Field of Study</label>
-        <input
-          type="text"
-          name="field"
-          defaultValue={(data as Education)?.field}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
 
@@ -165,7 +153,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             name="startDate"
             defaultValue={(data as Education)?.startDate}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="dashboard-input"
           />
         </div>
 
@@ -176,19 +164,9 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             name="endDate"
             defaultValue={(data as Education)?.endDate}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="dashboard-input"
           />
         </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">GPA (optional)</label>
-        <input
-          type="text"
-          name="gpa"
-          defaultValue={(data as Education)?.gpa}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
       </div>
     </>
   )
@@ -202,7 +180,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="name"
           defaultValue={(data as Certification)?.name}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
 
@@ -213,7 +191,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="issuer"
           defaultValue={(data as Certification)?.issuer}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
 
@@ -225,7 +203,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             name="issueDate"
             defaultValue={(data as Certification)?.issueDate}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="dashboard-input"
           />
         </div>
 
@@ -235,19 +213,9 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             type="date"
             name="expiryDate"
             defaultValue={(data as Certification)?.expiryDate}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="dashboard-input"
           />
         </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Credential ID (optional)</label>
-        <input
-          type="text"
-          name="credentialId"
-          defaultValue={(data as Certification)?.credentialId}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
       </div>
     </>
   )
@@ -261,7 +229,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="name"
           defaultValue={(data as Skill)?.name}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
 
@@ -271,7 +239,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="category"
           defaultValue={(data as Skill)?.category}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         >
           <option value="Programming">Programming</option>
           <option value="Tools">Tools</option>
@@ -282,19 +250,23 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Proficiency Level</label>
-        <div className="flex items-center mt-1">
-          {[1, 2, 3, 4, 5].map((level) => (
-            <button
-              key={level}
-              type="button"
-              onClick={() => setSkillLevel(level)}
-              className={`text-2xl ${level <= skillLevel ? 'text-yellow-400' : 'text-gray-300'}`}
-            >
-              ★
-            </button>
-          ))}
-        </div>
+        <label className="block text-sm font-medium text-gray-700">Percentage (%)</label>
+        <input
+          type="number"
+          name="level"
+          min="0"
+          max="100"
+          value={skillLevel || ''}
+          onChange={(e) => {
+            const value = e.target.value === '' ? '' : Number(e.target.value)
+            if (typeof value === 'number' && !isNaN(value)) {
+              const clampedValue = Math.min(Math.max(value, 0), 100)
+              setSkillLevel(clampedValue)
+            }
+          }}
+          required
+          className="dashboard-input"
+        />
       </div>
     </>
   )
@@ -308,7 +280,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="title"
           defaultValue={(data as Experience)?.title}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
 
@@ -319,18 +291,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           name="company"
           defaultValue={(data as Experience)?.company}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Location</label>
-        <input
-          type="text"
-          name="location"
-          defaultValue={(data as Experience)?.location}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
 
@@ -342,7 +303,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             name="startDate"
             defaultValue={(data as Experience)?.startDate}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="dashboard-input"
           />
         </div>
 
@@ -354,7 +315,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
               name="endDate"
               defaultValue={(data as Experience)?.endDate}
               disabled={isCurrent}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:bg-gray-100"
+              className="dashboard-input disabled:bg-gray-100"
             />
             <div className="flex items-center">
               <input
@@ -376,7 +337,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           defaultValue={(data as Experience)?.description}
           required
           rows={4}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="dashboard-input"
         />
       </div>
     </>
@@ -389,13 +350,24 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
       {type === 'skill' && renderSkillForm()}
       {type === 'experience' && renderExperienceForm()}
 
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-4">
+        <button
+          type="button"
+          onClick={() => router.push('/dashboard/resume')}
+          className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
+          className="text-white px-4 py-2 rounded-md hover:opacity-90 transition-colors cursor-pointer"
+          style={{
+            background: 'var(--color-primary)',
+            opacity: loading ? 0.7 : 1
+          }}
         >
-          {loading ? 'Saving...' : `Save ${type.charAt(0).toUpperCase() + type.slice(1)}`}
+          {loading ? 'Saving...' : data ? `Update ${type}` : `Add ${type}`}
         </button>
       </div>
     </form>
