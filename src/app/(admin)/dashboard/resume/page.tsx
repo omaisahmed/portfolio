@@ -130,7 +130,9 @@ export default function ResumePage() {
             <h3 className="font-medium text-black">{edu.degree}</h3>
             <p className="text-gray-600">{edu.institution}</p>
             <p className="text-sm text-gray-500">{edu.field}</p>
-            <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate}</p>
+            <p className="text-sm text-gray-500">
+              {new Date(edu.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {new Date(edu.endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
             {edu.gpa && <p className="text-sm text-gray-500">GPA: {edu.gpa}</p>}
           </>
         )
@@ -141,7 +143,9 @@ export default function ResumePage() {
           <>
             <h3 className="font-medium text-black">{cert.name}</h3>
             <p className="text-gray-600">{cert.issuer}</p>
-            <p className="text-sm text-gray-500">{cert.issueDate} - {cert.expiryDate || 'No Expiry'}</p>
+            <p className="text-sm text-gray-500">
+              {new Date(cert.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {cert.expiryDate ? new Date(cert.expiryDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'No Expiry'}
+            </p>
             {cert.credentialId && <p className="text-sm text-gray-500">ID: {cert.credentialId}</p>}
           </>
         )
@@ -152,15 +156,14 @@ export default function ResumePage() {
           <>
             <h3 className="font-medium text-black">{skill.name}</h3>
             <p className="text-gray-600">{skill.category}</p>
-            <div className="flex mt-1">
-              {[1, 2, 3, 4, 5].map(star => (
-                <span
-                  key={star}
-                  className={`text-lg ${star <= skill.level ? 'text-yellow-400' : 'text-gray-300'}`}
-                >
-                  ★
-                </span>
-              ))}
+            <div className="flex items-center mt-1">
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  className="bg-[var(--color-primary)] h-2.5 rounded-full" 
+                  style={{ width: `${skill.level}%` }}
+                ></div>
+              </div>
+              <span className="ml-2 text-sm text-gray-600">{skill.level}%</span>
             </div>
           </>
         )
@@ -172,7 +175,9 @@ export default function ResumePage() {
             <h3 className="font-medium text-black">{exp.title}</h3>
             <p className="text-gray-600">{exp.company}</p>
             <p className="text-sm text-gray-500">{exp.location}</p>
-            <p className="text-sm text-gray-500">{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</p>
+            <p className="text-sm text-gray-500">
+              {new Date(exp.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {exp.current ? 'Present' : new Date(exp.endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
             <p className="mt-2 text-gray-600">{exp.description}</p>
           </>
         )

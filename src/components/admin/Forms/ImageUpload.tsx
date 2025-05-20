@@ -2,30 +2,27 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { toast } from 'react-toastify'
 
 interface ImageUploadProps {
-  onImageSelect: (imageUrl: string) => void
-  currentImage?: string
+  value: string
+  onChange: (value: string) => void
+  label: string
 }
 
-export default function ImageUpload({ onImageSelect, currentImage }: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(currentImage || null)
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  value,
+  onChange,
+  label
+}) => {
   const [loading, setLoading] = useState(false)
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Create preview
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      setPreview(reader.result as string)
-    }
-    reader.readAsDataURL(file)
-
-    // Upload image
-    setLoading(true)
     try {
+      setLoading(true)
+      const file = e.target.files?.[0]
+      if (!file) return
+
       const formData = new FormData()
       formData.append('file', file)
 
@@ -34,12 +31,16 @@ export default function ImageUpload({ onImageSelect, currentImage }: ImageUpload
         body: formData
       })
 
-      if (!response.ok) throw new Error('Upload failed')
+      if (!response.ok) {
+        throw new Error('Failed to upload image')
+      }
 
       const data = await response.json()
-      onImageSelect(data.url)
+      onChange(data.url)
+      toast.success('Image uploaded successfully')
     } catch (error) {
       console.error('Upload error:', error)
+      toast.error('Failed to upload image')
     } finally {
       setLoading(false)
     }
@@ -47,36 +48,36 @@ export default function ImageUpload({ onImageSelect, currentImage }: ImageUpload
 
   return (
     <div className="space-y-4">
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="hidden"
-          id="image-upload"
-        />
-        <label
-          htmlFor="image-upload"
-          className="cursor-pointer block"
-        >
-          {preview ? (
-            <div className="relative h-48 w-full">
-              <Image
-                src={preview}
-                alt="Preview"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-          ) : (
-            <div className="h-48 flex items-center justify-center">
-              <span className="text-gray-500">
-                {loading ? 'Uploading...' : 'Click to upload image'}
-              </span>
-            </div>
-          )}
-        </label>
-      </div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="hidden"
+        id="imageUpload"
+      />
+      <label
+        htmlFor="imageUpload"
+        className="cursor-pointer block p-4 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-gray-400 transition"
+      >
+        {loading ? (
+          <span>Uploading...</span>
+        ) : (
+          <span>{label}</span>
+        )}
+      </label>
+      {value && (
+        <div className="relative w-full h-40">
+          <Image
+            src={value}
+            alt="Uploaded image"
+            fill
+            style={{ objectFit: 'cover' }}
+            className="rounded-lg"
+          />
+        </div>
+      )}
     </div>
   )
 }
+
+export default ImageUpload

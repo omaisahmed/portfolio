@@ -103,7 +103,7 @@ export default function Portfolio() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project) => (
-            <div key={project.id} className="portfolio-card">
+            <div key={project.id} className="portfolio-card rounded-lg transition-all duration-400 hover:translate-y-[-10px]" style={{ background: 'var(--background-color-1)', boxShadow: 'var(--shadow-1)', fontFamily: 'var(--font-primary)' }}>
               <div className="relative h-48 overflow-hidden group">
                 {project.images && project.images.length > 0 && (
                   <>
@@ -132,7 +132,7 @@ export default function Portfolio() {
                 <p className="mb-4" style={{ color: 'var(--color-body)' }}>
                   {project.description}
                 </p>
-                <div className="portfolio-tags">
+                <div className="portfolio-tags mb-4">
                   {Array.isArray(project.tags) && project.tags.map((tag, index) => (
                     <span 
                       key={index} 

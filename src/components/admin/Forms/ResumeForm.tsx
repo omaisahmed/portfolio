@@ -46,7 +46,7 @@ interface ResumeFormProps {
 export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [skillLevel, setSkillLevel] = useState((data as Skill)?.level * 20 || 60)
+  const [skillLevel, setSkillLevel] = useState((data as Skill)?.level || 60) // Remove the multiplication by 20
   const [isCurrent, setIsCurrent] = useState((data as Experience)?.current || false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,7 +78,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
       case 'skill':
         submitData = {
           name: formData.get('name'),
-          level: Math.round(skillLevel / 20) || 1, // Ensure minimum level of 1
+          level: Number(skillLevel), // Store the actual percentage value
           category: formData.get('category')
         }
         break
@@ -252,16 +252,23 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
       <div>
         <label className="block text-sm font-medium text-gray-700">Percentage (%)</label>
         <input
-          type="number"
+          type="text"
           name="level"
+          pattern="[0-9]*"
+          inputMode="numeric"
           min="0"
           max="100"
           value={skillLevel || ''}
           onChange={(e) => {
-            const value = e.target.value === '' ? '' : Number(e.target.value)
-            if (typeof value === 'number' && !isNaN(value)) {
-              const clampedValue = Math.min(Math.max(value, 0), 100)
-              setSkillLevel(clampedValue)
+            const value = e.target.value.replace(/[^0-9]/g, '')
+            if (value === '') {
+              setSkillLevel(0)
+            } else {
+              const numValue = Number(value)
+              if (!isNaN(numValue)) {
+                const clampedValue = Math.min(Math.max(numValue, 0), 100)
+                setSkillLevel(clampedValue)
+              }
             }
           }}
           required

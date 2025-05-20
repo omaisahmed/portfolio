@@ -18,6 +18,7 @@ export default function Sidebar({ isOpen }: SidebarProps) {
     { name: 'Testimonials', href: '/dashboard/testimonials' },
     { name: 'Resume', href: '/dashboard/resume' },
     { name: 'Contact', href: '/dashboard/contact' },
+    { name: 'Messages', href: '/dashboard/messages' }  // Added Messages menu item
   ]
 
   return (

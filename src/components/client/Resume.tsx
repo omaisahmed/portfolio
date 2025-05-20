@@ -1,9 +1,77 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+interface Education {
+  id: string
+  institution: string
+  degree: string
+  field: string
+  startDate: string
+  endDate: string
+  gpa?: string
+}
+
+interface Certification {
+  id: string
+  name: string
+  issuer: string
+  issueDate: string
+  expiryDate?: string
+}
+
+interface Skill {
+  id: string
+  name: string
+  level: number
+  category: string
+}
+
+interface Experience {
+  id: string
+  title: string
+  company: string
+  location: string
+  startDate: string
+  endDate: string
+  current: boolean
+  description: string
+}
 
 export default function Resume() {
   const [activeTab, setActiveTab] = useState('education')
+  const [data, setData] = useState<{
+    education: Education[]
+    certifications: Certification[]
+    professional: Skill[]
+    experience: Experience[]
+  }>({
+    education: [],
+    certifications: [],
+    professional: [],
+    experience: []
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const endpoint = activeTab === 'professional' ? 'skill' : 
+                        activeTab === 'certifications' ? 'certification' : activeTab
+        const response = await fetch(`/api/resume/${endpoint}`)
+        if (!response.ok) throw new Error('Failed to fetch data')
+        const items = await response.json()
+        setData(prev => ({ ...prev, [activeTab]: items }))
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [activeTab])
 
   return (
     <section id="resume" className="py-20" style={{ background: 'var(--background-color-1)' }}>
@@ -65,12 +133,19 @@ export default function Resume() {
             className={`${activeTab === 'education' ? 'block' : 'hidden'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
-                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>Bachelor of Science in Computer Science</h3>
-                <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>2018 - 2022</p>
-                <p style={{ color: 'var(--color-body)' }}>Federal Urdu University of Arts, Science & Technology</p>
-              </div>
-              {/* Add more education items as needed */}
+              {loading ? (
+                <div>Loading...</div>
+              ) : data.education.map((edu) => (
+                <div key={edu.id} className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
+                  <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>{edu.degree}</h3>
+                  <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>
+                    {new Date(edu.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {new Date(edu.endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                  <p style={{ color: 'var(--color-body)' }}>{edu.institution}</p>
+                  {edu.field && <p style={{ color: 'var(--color-body)' }}>{edu.field}</p>}
+                  {edu.gpa && <p style={{ color: 'var(--color-body)' }}>GPA: {edu.gpa}</p>}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -81,12 +156,17 @@ export default function Resume() {
             className={`${activeTab === 'certifications' ? 'block' : 'hidden'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
-                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>Web Development</h3>
-                <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>2021</p>
-                <p style={{ color: 'var(--color-body)' }}>SMIT - Saylani Mass IT Training Program</p>
-              </div>
-              {/* Add more certification items as needed */}
+              {loading ? (
+                <div>Loading...</div>
+              ) : data.certifications.map((cert) => (
+                <div key={cert.id} className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
+                  <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>{cert.name}</h3>
+                  <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>
+                    {new Date(cert.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {cert.expiryDate ? new Date(cert.expiryDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'No Expiry'}
+                  </p>
+                  <p style={{ color: 'var(--color-body)' }}>{cert.issuer}</p>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -98,16 +178,22 @@ export default function Resume() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
-                <div className="skill-item">
-                  <div className="flex justify-between mb-2">
-                    <span style={{ color: 'var(--color-heading)' }}>React.js</span>
-                    <span style={{ color: 'var(--color-primary)' }}>95%</span>
+                {loading ? (
+                  <div>Loading...</div>
+                ) : data.professional.map((skill) => (
+                  <div key={skill.id} className="skill-item">
+                    <div className="flex justify-between mb-2">
+                      <span style={{ color: 'var(--color-heading)' }}>{skill.name}</span>
+                      <span style={{ color: 'var(--color-primary)' }}>{skill.level}%</span>
+                    </div>
+                    <div className="h-2 bg-[var(--background-color-2)] rounded-full">
+                      <div 
+                        className="h-full bg-[var(--color-primary)] rounded-full" 
+                        style={{ width: `${skill.level}%` }}
+                      ></div>
+                    </div>
                   </div>
-                  <div className="h-2 bg-[var(--background-color-2)] rounded-full">
-                    <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: '95%' }}></div>
-                  </div>
-                </div>
-                {/* Add more skill items as needed */}
+                ))}
               </div>
             </div>
           </div>
@@ -119,17 +205,19 @@ export default function Resume() {
             className={`${activeTab === 'experience' ? 'block' : 'hidden'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
-                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>Software Engineer</h3>
-                <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>2022 - Present</p>
-                <p style={{ color: 'var(--color-body)' }}>Techwards - Software House</p>
-                <ul className="list-disc list-inside mt-2" style={{ color: 'var(--color-body)' }}>
-                  <li>Developed and maintained web applications using React.js</li>
-                  <li>Collaborated with cross-functional teams</li>
-                  <li>Implemented responsive designs and optimized performance</li>
-                </ul>
-              </div>
-              {/* Add more experience items as needed */}
+              {loading ? (
+                <div>Loading...</div>
+              ) : data.experience.map((exp) => (
+                <div key={exp.id} className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
+                  <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>{exp.title}</h3>
+                  <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>
+                    {new Date(exp.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {exp.current ? 'Present' : new Date(exp.endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                  <p style={{ color: 'var(--color-body)' }}>{exp.company}</p>
+                  {exp.location && <p style={{ color: 'var(--color-body)' }}>{exp.location}</p>}
+                  <p className="mt-2" style={{ color: 'var(--color-body)' }}>{exp.description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

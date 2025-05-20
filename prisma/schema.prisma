@@ -109,12 +109,30 @@ model Experience {
 }
 
 model Contact {
+  id             String   @id @default(cuid())
+  image          String?
+  name           String
+  title          String
+  email          String
+  phone          String
+  description    String
+  githubUrl      String?
+  linkedinUrl    String?
+  facebookUrl    String?
+  instagramUrl   String?
+  whatsappNumber String?
+  twitterUrl     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model ContactMessage {
   id        String   @id @default(cuid())
   name      String
   email     String
+  phone     String?
   subject   String
   message   String
-  phone     String?
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

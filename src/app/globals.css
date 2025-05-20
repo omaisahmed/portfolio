@@ -100,7 +100,7 @@ body {
 
 /* Override default form element styling */
 input, textarea, select {
-  color: #333333 !important;
+  color: #333333;
   background-color: white !important;
 }
 
@@ -1227,4 +1227,8 @@ body.modal-open {
 .modal-open main:not(:has(.fixed)) {
   filter: blur(4px);
   transition: filter 0.2s ease-in-
+}
+
+.contact-form-input{
+  color: white;
 }
