@@ -320,7 +320,7 @@ export default function Contact() {
                     fontWeight: '500'
                   }}
                   required
-                  placeholder="Enter your name"
+                  placeholder="Enter your full name"
                 />
               </div>
               <div>
@@ -341,6 +341,7 @@ export default function Contact() {
                     fontWeight: '500'
                   }}
                   required
+                  placeholder="Enter your email address"
                 />
               </div>
               <div>
@@ -360,6 +361,7 @@ export default function Contact() {
                     fontSize: '1rem',
                     fontWeight: '500'
                   }}
+                  placeholder="Enter your phone number"
                 />
               </div>
               <div>
@@ -380,6 +382,7 @@ export default function Contact() {
                     fontWeight: '500'
                   }}
                   required
+                  placeholder="Enter message subject"
                 />
               </div>
               <div>
@@ -400,6 +403,7 @@ export default function Contact() {
                     fontWeight: '500'
                   }}
                   required
+                  placeholder="Type your message here..."
                 ></textarea>
               </div>
               <button
