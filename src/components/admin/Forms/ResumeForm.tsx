@@ -32,7 +32,7 @@ interface Experience {
   title: string
   company: string
   startDate: string
-  endDate: string
+  endDate?: string  // Make it optional here too
   current: boolean
   description: string
 }
@@ -46,14 +46,49 @@ interface ResumeFormProps {
 export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [skillLevel, setSkillLevel] = useState((data as Skill)?.level || 60) // Remove the multiplication by 20
+  const [skillLevel, setSkillLevel] = useState((data as Skill)?.level || 20) // Remove the multiplication by 20
   const [isCurrent, setIsCurrent] = useState((data as Experience)?.current || false)
+  const [dateError, setDateError] = useState<string>('')
+
+  const validateDates = (startDate: string, endDate?: string) => {
+    if (!startDate) return false
+    if (!endDate && !isCurrent) return false
+    
+    const start = new Date(startDate)
+    if (endDate) {
+      const end = new Date(endDate)
+      // Check if dates are the same or end is earlier
+      if (end.getTime() <= start.getTime()) {
+        setDateError('End date must be later than start date')
+        return false
+      }
+    }
+    
+    setDateError('')
+    return true
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
-
     const formData = new FormData(e.currentTarget)
+    
+    // Validate dates based on form type
+    const startDate = formData.get('startDate')?.toString() || ''
+    const endDate = formData.get('endDate')?.toString()
+    const issueDate = formData.get('issueDate')?.toString()
+    const expiryDate = formData.get('expiryDate')?.toString()
+
+    if (type === 'education' || type === 'experience') {
+      if (!validateDates(startDate, endDate)) {
+        return
+      }
+    } else if (type === 'certification' && expiryDate) {
+      if (!validateDates(issueDate!, expiryDate)) {
+        return
+      }
+    }
+
+    setLoading(true)
     let submitData: any = {}
 
     switch (type) {
@@ -88,7 +123,7 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           title: formData.get('title'),
           company: formData.get('company'),
           startDate: formData.get('startDate'),
-          endDate: isCurrent ? null : formData.get('endDate'), // Change 'Present' to null
+          endDate: isCurrent ? undefined : formData.get('endDate')?.toString(),  // Use undefined instead of null
           current: isCurrent,
           description: formData.get('description')
         }
@@ -105,14 +140,24 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
         body: JSON.stringify(submitData)
       })
 
-      const responseData = await response.json()
+      let responseData
+      try {
+        responseData = await response.json()
+      } catch (err) {
+        throw new Error(`Failed to parse response from server`)
+      }
 
       if (!response.ok) {
-        throw new Error(responseData.error || `Failed to save ${type}`)
+        throw new Error(
+          responseData?.message || 
+          responseData?.error || 
+          `Failed to save ${type}. Status: ${response.status}`
+        )
       }
       
       toast.success(`${type} saved successfully!`)
       onSuccess?.()
+      router.push('/dashboard/resume')
     } catch (error) {
       console.error('Error:', error)
       toast.error(error instanceof Error ? error.message : `Failed to save ${type}`)
@@ -152,6 +197,14 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             type="date"
             name="startDate"
             defaultValue={(data as Education)?.startDate}
+            onChange={(e) => {
+              const endDateInput = e.currentTarget.form?.querySelector('input[name="endDate"]') as HTMLInputElement
+              if (endDateInput && endDateInput.value && new Date(endDateInput.value) <= new Date(e.target.value)) {
+                setDateError('End date must be later than start date')
+              } else {
+                setDateError('')
+              }
+            }}
             required
             className="dashboard-input"
           />
@@ -163,11 +216,22 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             type="date"
             name="endDate"
             defaultValue={(data as Education)?.endDate}
+            onChange={(e) => {
+              const startDateInput = e.currentTarget.form?.querySelector('input[name="startDate"]') as HTMLInputElement
+              if (startDateInput && e.target.value && new Date(e.target.value) <= new Date(startDateInput.value)) {
+                setDateError('End date must be later than start date')
+              } else {
+                setDateError('')
+              }
+            }}
             required
             className="dashboard-input"
           />
         </div>
       </div>
+      {dateError && (
+        <p className="text-red-500 text-sm mt-1">{dateError}</p>
+      )}
     </>
   )
 
@@ -202,6 +266,14 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             type="date"
             name="issueDate"
             defaultValue={(data as Certification)?.issueDate}
+            onChange={(e) => {
+              const expiryDateInput = e.currentTarget.form?.querySelector('input[name="expiryDate"]') as HTMLInputElement
+              if (expiryDateInput && expiryDateInput.value && new Date(expiryDateInput.value) <= new Date(e.target.value)) {
+                setDateError('Expiry date must be later than issue date')
+              } else {
+                setDateError('')
+              }
+            }}
             required
             className="dashboard-input"
           />
@@ -213,10 +285,21 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             type="date"
             name="expiryDate"
             defaultValue={(data as Certification)?.expiryDate}
+            onChange={(e) => {
+              const issueDateInput = e.currentTarget.form?.querySelector('input[name="issueDate"]') as HTMLInputElement
+              if (issueDateInput && e.target.value && new Date(e.target.value) <= new Date(issueDateInput.value)) {
+                setDateError('Expiry date must be later than issue date')
+              } else {
+                setDateError('')
+              }
+            }}
             className="dashboard-input"
           />
         </div>
       </div>
+      {dateError && (
+        <p className="text-red-500 text-sm mt-1">{dateError}</p>
+      )}
     </>
   )
 
@@ -309,6 +392,14 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
             type="date"
             name="startDate"
             defaultValue={(data as Experience)?.startDate}
+            onChange={(e) => {
+              const endDateInput = e.currentTarget.form?.querySelector('input[name="endDate"]') as HTMLInputElement
+              if (!isCurrent && endDateInput && endDateInput.value && new Date(endDateInput.value) <= new Date(e.target.value)) {
+                setDateError('End date must be later than start date')
+              } else {
+                setDateError('')
+              }
+            }}
             required
             className="dashboard-input"
           />
@@ -322,31 +413,42 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
               name="endDate"
               defaultValue={(data as Experience)?.endDate}
               disabled={isCurrent}
-              className="dashboard-input disabled:bg-gray-100"
+              required={!isCurrent}
+              onChange={(e) => {
+                if (!isCurrent) {
+                  const startDateInput = e.currentTarget.form?.querySelector('input[name="startDate"]') as HTMLInputElement
+                  if (startDateInput && e.target.value && new Date(e.target.value) <= new Date(startDateInput.value)) {
+                    setDateError('End date must be later than start date')
+                  } else {
+                    setDateError('')
+                  }
+                }
+              }}
+              className={`dashboard-input ${isCurrent ? 'bg-gray-100' : ''}`}
             />
             <div className="flex items-center">
               <input
                 type="checkbox"
+                id="currentPosition"
                 checked={isCurrent}
-                onChange={(e) => setIsCurrent(e.target.checked)}
+                onChange={(e) => {
+                  setIsCurrent(e.target.checked)
+                  if (e.target.checked) {
+                    setDateError('')
+                  }
+                }}
                 className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
               />
-              <label className="ml-2 text-sm text-gray-600">Current Position</label>
+              <label htmlFor="currentPosition" className="ml-2 text-sm text-gray-600">
+                Current Position
+              </label>
             </div>
           </div>
         </div>
       </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Description</label>
-        <textarea
-          name="description"
-          defaultValue={(data as Experience)?.description}
-          required
-          rows={4}
-          className="dashboard-input"
-        />
-      </div>
+      {dateError && (
+        <p className="text-red-500 text-sm mt-1">{dateError}</p>
+      )}
     </>
   )
 

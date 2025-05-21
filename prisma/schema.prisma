@@ -15,6 +15,7 @@ model Profile {
   name           String
   title          String
   bio            String
+  image          String
   githubUrl      String?
   linkedinUrl    String?
   facebookUrl    String?
@@ -101,7 +102,7 @@ model Experience {
   title       String
   company     String
   startDate   String
-  endDate     String
+  endDate     String?  // Add the ? to make it optional
   current     Boolean  @default(false)
   description String
   createdAt   DateTime @default(now())

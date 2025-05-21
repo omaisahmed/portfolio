@@ -203,6 +203,7 @@ export default function ProjectForm({ project }: ProjectFormProps) {
               <div key={index} className="relative group">
                 <img
                   src={image}
+
                   alt={`Project image ${index + 1}`}
                   className="w-full h-32 object-cover rounded-lg"
                 />
@@ -335,7 +336,6 @@ export default function ProjectForm({ project }: ProjectFormProps) {
             opacity: loading ? 0.7 : 1
           }}
         >
-          {loading ? 'Saving...' : 'Save Project'}
           {loading ? 'Saving...' : project ? 'Update Project' : 'Save Project'}
         </button>
       </div>

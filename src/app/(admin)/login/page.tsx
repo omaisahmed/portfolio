@@ -9,7 +9,9 @@ import 'react-toastify/dist/ReactToastify.css'
 export default function LoginPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
-
+  const [attempts, setAttempts] = useState(0);
+  const [lockoutTime, setLockoutTime] = useState<number | null>(null);
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)

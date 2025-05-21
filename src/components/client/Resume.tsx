@@ -88,7 +88,7 @@ export default function Resume() {
         {/* Tab Navigation */}
         <div className="mb-8">
           <ul 
-            className="rn-nav-list flex flex-wrap justify-between gap-4 p-4 rounded-lg"
+            className="rn-nav-list flex flex-wrap justify-between gap-4 p-1 rounded-lg"
             role="tablist"
             style={{
               background: 'var(--background-color-1)',

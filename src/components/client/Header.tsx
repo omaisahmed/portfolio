@@ -1,14 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 interface Profile {
   name: string
   title: string
   bio: string
+  image: string
   githubUrl?: string
   linkedinUrl?: string
   facebookUrl?: string
@@ -27,10 +28,19 @@ export default function Header() {
   const typingSpeed = 100
 
   useEffect(() => {
-    fetch('/api/profile')
-      .then(res => res.json())
-      .then(data => setProfile(data))
-      .catch(error => console.error('Error fetching profile:', error))
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/profile')
+        if (response.ok) {
+          const data = await response.json()
+          setProfile(data)
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error)
+      }
+    }
+    
+    fetchProfile()
   }, []) // Separate the profile fetch
 
   useEffect(() => {
@@ -225,8 +235,8 @@ export default function Header() {
               <div className="thumbnail">
                 <div className="inner">
                   <Image 
-                    src="/assets/images/portfolio.png"
-                    alt="Omais Ahmed - Portfolio"
+                    src={profile?.image || '/assets/images/loader.gif'}
+                    alt={`${profile?.name || 'Portfolio'} - Portfolio`}
                     width={500}
                     height={500}
                     className="object-contain"

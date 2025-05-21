@@ -1,14 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
+import Image from 'next/image'
 
 interface Profile {
   id?: string
   name: string
   title: string
   bio: string
+  image: string
   githubUrl?: string
   linkedinUrl?: string
   facebookUrl?: string
@@ -23,8 +25,8 @@ export default function ProfilePage() {
   const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Fetch profile data on component mount
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -41,28 +43,62 @@ export default function ProfilePage() {
     fetchProfile()
   }, [])
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = e.target.files?.[0]
+      if (!file) return
+
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image')
+      }
+
+      const data = await response.json()
+      setProfile(prev => prev ? { ...prev, image: data.url } : { name: '', title: '', bio: '', image: data.url })
+      toast.success('Image uploaded successfully')
+    } catch (error) {
+      console.error('Upload error:', error)
+      toast.error('Failed to upload image')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
 
     const formData = new FormData(e.currentTarget)
+    
+    // Check if image exists
+    if (!profile?.image) {
+      toast.error('Profile image is required')
+      setLoading(false)
+      return
+    }
+
     const data = {
       name: formData.get('name'),
       title: formData.get('title'),
       bio: formData.get('bio'),
-      githubUrl: formData.get('githubUrl'),
-      linkedinUrl: formData.get('linkedinUrl'),
-      facebookUrl: formData.get('facebookUrl'),
-      instagramUrl: formData.get('instagramUrl'),
-      whatsappNumber: formData.get('whatsappNumber'),
-      twitterUrl: formData.get('twitterUrl'),
-      personalWebsite: formData.get('personalWebsite')
-      // Add any other new fields here
+      image: profile.image,
+      githubUrl: formData.get('githubUrl') || null,
+      linkedinUrl: formData.get('linkedinUrl') || null,
+      facebookUrl: formData.get('facebookUrl') || null,
+      instagramUrl: formData.get('instagramUrl') || null,
+      whatsappNumber: formData.get('whatsappNumber') || null,
+      twitterUrl: formData.get('twitterUrl') || null,
+      personalWebsite: formData.get('personalWebsite') || null
     }
 
     try {
-      const url = profile ? `/api/profile/${profile.id}` : '/api/profile'
-      const method = profile ? 'PUT' : 'POST'
+      const url = profile?.id ? `/api/profile/${profile.id}` : '/api/profile'
+      const method = profile?.id ? 'PUT' : 'POST'
       
       const response = await fetch(url, {
         method,
@@ -70,30 +106,18 @@ export default function ProfilePage() {
         body: JSON.stringify(data)
       })
 
-      if (!response.ok) throw new Error('Failed to save profile')
-      
-      // Replace alert with toast notification
-      toast.success('Profile saved successfully!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      })
-      
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        throw new Error(responseData.message || responseData.error || 'Failed to save profile')
+      }
+
+      setProfile(responseData)
+      toast.success('Profile saved successfully!')
       router.refresh()
     } catch (error) {
       console.error('Error saving profile:', error)
-      // Show error toast instead of alert
-      toast.error('Error saving profile. Please try again.', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      })
+      toast.error(error instanceof Error ? error.message : 'Failed to save profile. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -107,6 +131,38 @@ export default function ProfilePage() {
 
       <div className="bg-white rounded-lg shadow-md p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-bold mb-2 text-gray-800">
+              Profile Image <span className="text-red-500">*</span>
+            </label>
+            <div className="space-y-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+                ref={fileInputRef}
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Upload Image
+              </button>
+              {profile?.image && (
+                <div className="relative w-full h-40">
+                  <Image
+                    src={profile.image}
+                    alt="Profile image"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="rounded-lg"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
           <div>
             <label className="dashboard-label" htmlFor="name">Name</label>
             <input
@@ -225,7 +281,7 @@ export default function ProfilePage() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-[var(--color-subtitle)] text-white px-6 py-3 text-base font-medium rounded-md hover:bg-[var(--color-subtitle)] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+              className="bg-[var(--color-subtitle)] text-white px-6 py-3 text-base font-medium rounded-md hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Changes'}
             </button>

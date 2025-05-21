@@ -112,6 +112,8 @@ export default function Portfolio() {
                       alt={project.title}
                       fill
                       className="object-cover transition-transform duration-400"
+                      loading="lazy" // Add lazy loading
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Add responsive sizes
                     />
                     <div 
                       className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
@@ -208,6 +210,14 @@ export default function Portfolio() {
             className="absolute left-4 top-1/2 -translate-y-1/2 text-white p-2 hover:text-gray-300"
           >
             ←
+          </button>
+          <button
+            aria-label="Previous image"
+            onClick={prevLightboxImage}
+            onKeyDown={(e) => e.key === 'Enter' && prevLightboxImage()}
+            tabIndex={0}
+          >
+            {/* button content */}
           </button>
           <button
             onClick={nextLightboxImage}
