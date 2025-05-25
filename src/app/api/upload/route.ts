@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
+import { v2 as cloudinary } from 'cloudinary'
 
 // Maximum file size (5MB)
 const MAX_FILE_SIZE = 5 * 1024 * 1024
@@ -11,6 +10,13 @@ const ALLOWED_FILE_TYPES = [
   'image/webp',
   'image/gif'
 ]
+
+// Configure Cloudinary using environment variables
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 export async function POST(request: Request) {
   try {
@@ -40,25 +46,39 @@ export async function POST(request: Request) {
       )
     }
 
+    // Convert file to buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Create uploads directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-    try {
-      await mkdir(uploadDir, { recursive: true })
-    } catch (error) {
-      // Ignore error if directory already exists
-    }
-
     // Generate unique filename
     const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`
-    const filepath = path.join(uploadDir, filename)
     
-    await writeFile(filepath, buffer)
+    // Upload to Cloudinary
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'portfolio',
+          public_id: filename.split('.')[0], // Remove extension for public_id
+          resource_type: 'auto'
+        },
+        (error, result) => {
+          if (error) {
+            console.error('Cloudinary upload error:', error)
+            resolve(NextResponse.json(
+              { error: 'Failed to upload file' },
+              { status: 500 }
+            ))
+          } else {
+            resolve(NextResponse.json({ 
+              url: result?.secure_url
+            }))
+          }
+        }
+      )
 
-    return NextResponse.json({ 
-      url: `/uploads/${filename}`
+      // Write buffer to stream
+      uploadStream.write(buffer)
+      uploadStream.end()
     })
   } catch (error) {
     console.error('Error uploading file:', error)

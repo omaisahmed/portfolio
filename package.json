@@ -20,6 +20,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "animate.css": "^4.1.1",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.1",
     "framer-motion": "^12.10.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.511.0",
