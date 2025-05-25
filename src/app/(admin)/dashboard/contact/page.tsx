@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useCallback } from 'react' // Add useCallback import
 import { toast } from 'react-toastify'
 import Card from '@/components/admin/Card'
 import ContactForm from '@/components/admin/Forms/ContactForm'
@@ -23,13 +22,9 @@ interface ContactInfo {
 export default function ContactPage() {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null)
   const [loading, setLoading] = useState(true)
-  const router = useRouter()
-
-  useEffect(() => {
-    fetchContactInfo()
-  }, [])
-
-  const fetchContactInfo = async () => {
+  
+  // Memoize the fetchContactInfo function
+  const fetchContactInfo = useCallback(async () => {
     try {
       const response = await fetch('/api/contact')
       if (!response.ok) throw new Error('Failed to fetch contact information')
@@ -41,7 +36,11 @@ export default function ContactPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchContactInfo()
+  }, [fetchContactInfo])
 
   if (loading) {
     return <p>Loading contact information...</p>
