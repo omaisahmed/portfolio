@@ -26,7 +26,7 @@ export default function Header() {
   const typingSpeed = 100
 
   useEffect(() => {
-    let currentText = rotatingTexts[textIndex]
+    const currentText = rotatingTexts[textIndex]
     let currentChar = 0
     let typingInterval: NodeJS.Timeout | null = null
     let eraseInterval: NodeJS.Timeout | null = null

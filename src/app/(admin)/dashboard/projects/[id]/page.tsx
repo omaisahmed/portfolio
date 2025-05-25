@@ -3,7 +3,11 @@ import ProjectForm from '@/components/admin/Forms/ProjectForm'
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 
-export default async function EditProjectPage({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string }
+}
+
+export default async function EditProjectPage({ params }: Props) {
   const project = await prisma.project.findUnique({
     where: { id: params.id }
   })
