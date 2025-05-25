@@ -1,47 +1,29 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useProfile } from '@/lib/hooks/useData'
+import { useSettings } from '@/lib/hooks/useData'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-interface Profile {
-  name: string
-  title: string
-  bio: string
-  image: string
-  githubUrl?: string
-  linkedinUrl?: string
-  facebookUrl?: string
-  instagramUrl?: string
-  whatsappNumber?: string
-  twitterUrl?: string
-}
-
 export default function Header() {
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const { data: profile, error, isLoading } = useProfile()
+  const [settings, setSettings] = useState({ logo_image: '' })
+  const { data: settingsData } = useSettings()
+
+  useEffect(() => {
+    if (settingsData) {
+      setSettings(settingsData)
+    }
+  }, [settingsData])
+
   const [textIndex, setTextIndex] = useState(0)
   const [displayText, setDisplayText] = useState('')
   const [isScrolled, setIsScrolled] = useState(false)
   // Move this outside the component to prevent recreation
   const rotatingTexts = ['Developer.', 'Software Engineer.', 'Professional Coder.']
   const typingSpeed = 100
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await fetch('/api/profile')
-        if (response.ok) {
-          const data = await response.json()
-          setProfile(data)
-        }
-      } catch (error) {
-        console.error('Error fetching profile:', error)
-      }
-    }
-    
-    fetchProfile()
-  }, []) // Separate the profile fetch
 
   useEffect(() => {
     let currentText = rotatingTexts[textIndex]
@@ -108,14 +90,16 @@ export default function Header() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="text-2xl font-bold" style={{ color: 'var(--color-heading)' }}>
-              <Image 
-                src="/assets/images/logo.png" 
-                alt="Logo" 
-                width={120} 
-                height={40}
-                className="object-contain"
-                priority
-              />
+              {settings.logo_image && (
+                <Image 
+                  src={settings.logo_image}
+                  alt="Logo" 
+                  width={120} 
+                  height={40}
+                  className="object-contain"
+                  priority
+                />
+              )}
             </Link>
             {/* Modified menu for mobile responsiveness */}
             <div className="hidden md:flex space-x-8 flex-wrap">
@@ -235,7 +219,7 @@ export default function Header() {
               <div className="thumbnail">
                 <div className="inner">
                   <Image 
-                    src={profile?.image || '/assets/images/loader.gif'}
+                    src={profile?.image || '/assets/images/portfolio.png'}
                     alt={`${profile?.name || 'Portfolio'} - Portfolio`}
                     width={500}
                     height={500}

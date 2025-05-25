@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useServices } from '@/lib/hooks/useData'
 
 interface Service {
   id: string
@@ -31,14 +31,21 @@ const ServiceCard = ({ service }: { service: Service }) => (
 )
 
 export default function Services() {
-  const [services, setServices] = useState<Service[]>([])
 
-  useEffect(() => {
-    fetch('/api/services')
-      .then(res => res.json())
-      .then(data => setServices(data))
-      .catch(error => console.error('Error fetching services:', error))
-  }, [])
+  const { data: services, error, isLoading } = useServices()
+
+  if (isLoading) return <div>Loading services...</div>
+  if (error) return <div>Error loading services</div>
+  if (!services) return null
+  
+  // const [services, setServices] = useState<Service[]>([])
+
+  // useEffect(() => {
+  //   fetch('/api/services')
+  //     .then(res => res.json())
+  //     .then(data => setServices(data))
+  //     .catch(error => console.error('Error fetching services:', error))
+  // }, [])
 
   return (
     <section id="services" className="py-20" style={{ background: 'var(--background-color-2)' }}>
@@ -53,7 +60,7 @@ export default function Services() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {services.map((service) => (
+          {services.map((service: Service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
         </div>

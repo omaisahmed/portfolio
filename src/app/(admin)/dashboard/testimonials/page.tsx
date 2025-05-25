@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { toast } from 'react-toastify'
 import Card from '@/components/admin/Card'
 import ConfirmModal from '@/components/admin/ConfirmModal'
+import { useTestimonials } from '@/lib/hooks/useData'
 
 interface Testimonial {
   id: string
@@ -16,34 +17,10 @@ interface Testimonial {
 }
 
 export default function TestimonialsPage() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [loading, setLoading] = useState(true)
+  const { data: testimonials, error, isLoading, mutate } = useTestimonials()
   const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [testimonialToDelete, setTestimonialToDelete] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetchTestimonials()
-  }, [])
-
-  const fetchTestimonials = async () => {
-    try {
-      const response = await fetch('/api/testimonials')
-      if (!response.ok) throw new Error('Failed to fetch testimonials')
-      const data = await response.json()
-      setTestimonials(data)
-    } catch (error) {
-      console.error('Error fetching testimonials:', error)
-      toast.error('Failed to load testimonials')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const confirmDelete = (id: string) => {
-    setTestimonialToDelete(id)
-    setIsModalOpen(true)
-  }
 
   const handleDelete = async () => {
     if (!testimonialToDelete) return
@@ -56,7 +33,7 @@ export default function TestimonialsPage() {
       if (!response.ok) throw new Error('Failed to delete testimonial')
       
       toast.success('Testimonial deleted successfully')
-      fetchTestimonials()
+      mutate() // Revalidate the data
       router.refresh()
     } catch (error) {
       console.error('Error deleting testimonial:', error)
@@ -66,6 +43,9 @@ export default function TestimonialsPage() {
       setTestimonialToDelete(null)
     }
   }
+
+  if (isLoading) return <p>Loading testimonials...</p>
+  if (error) return <p>Error loading testimonials</p>
 
   const cancelDelete = () => {
     setIsModalOpen(false)
@@ -84,7 +64,7 @@ export default function TestimonialsPage() {
         </Link>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <p>Loading testimonials...</p>
       ) : testimonials.length === 0 ? (
         <Card>
@@ -92,7 +72,7 @@ export default function TestimonialsPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {testimonials.map((testimonial) => (
+          {testimonials.map((testimonial: Testimonial) => (
             <Card key={testimonial.id}>
               <div className="flex justify-between items-start mb-4">
                 <div>
@@ -114,7 +94,10 @@ export default function TestimonialsPage() {
                   Edit
                 </Link>
                 <button
-                  onClick={() => confirmDelete(testimonial.id)}
+                  onClick={() => {
+                    setTestimonialToDelete(testimonial.id);
+                    setIsModalOpen(true);
+                  }}
                   className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                 >
                   Delete

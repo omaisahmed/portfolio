@@ -15,18 +15,33 @@ export default function Home() {
   const [contentReady, setContentReady] = useState(false)
 
   useEffect(() => {
-    // Create a promise that resolves after a small delay to ensure content is ready
     const loadContent = async () => {
       try {
         // Wait for the next frame to ensure React has finished rendering
         await new Promise(resolve => requestAnimationFrame(resolve))
-        // Add a small delay to ensure all content is properly rendered
-        await new Promise(resolve => setTimeout(resolve, 500))
+        
+        // Wait for all images to load
+        const images = document.querySelectorAll('img')
+        const imagePromises = Array.from(images).map(img => {
+          if (img.complete) return Promise.resolve()
+          return new Promise((resolve, reject) => {
+            img.addEventListener('load', resolve)
+            img.addEventListener('error', reject)
+          })
+        })
+
+        // Wait for both React rendering and image loading
+        await Promise.all([
+          new Promise(resolve => setTimeout(resolve, 500)),
+          Promise.all(imagePromises)
+        ])
+
         setContentReady(true)
-        // Add a small delay before hiding the spinner
         setTimeout(() => setIsLoading(false), 100)
       } catch (error) {
         console.error('Error loading content:', error)
+        // Even if there's an error, we should still hide the loader
+        setContentReady(true)
         setIsLoading(false)
       }
     }

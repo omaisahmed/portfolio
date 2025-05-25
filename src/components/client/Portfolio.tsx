@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Eye } from 'lucide-react'
+import { useProjects } from '@/lib/hooks/useData'
 
 interface Project {
   id: string
@@ -16,7 +17,7 @@ interface Project {
 }
 
 export default function Portfolio() {
-  const [projects, setProjects] = useState<Project[]>([])
+  const { data: projects = [] } = useProjects()
   const [currentImageIndexes, setCurrentImageIndexes] = useState<{[key: string]: number}>({})
   const [lightbox, setLightbox] = useState({
     isOpen: false,
@@ -25,19 +26,23 @@ export default function Portfolio() {
   })
 
   useEffect(() => {
-    fetch('/api/projects')
-      .then(res => res.json())
-      .then(data => {
-        setProjects(data)
-        // Initialize current image indexes
-        const indexes = data.reduce((acc: {[key: string]: number}, project: Project) => {
+    // Only initialize indexes for new projects or when there are no current indexes
+    const hasAllIndexes = projects.every((project: Project) =>
+      currentImageIndexes.hasOwnProperty(project.id)
+    )
+    
+    if (!hasAllIndexes) {
+      const indexes = projects.reduce((acc: {[key: string]: number}, project: Project) => {
+        // Only set index if it doesn't already exist
+        if (!currentImageIndexes.hasOwnProperty(project.id)) {
           acc[project.id] = 0
-          return acc
-        }, {})
-        setCurrentImageIndexes(indexes)
-      })
-      .catch(error => console.error('Error fetching projects:', error))
-  }, [])
+        }
+        return acc
+      }, {...currentImageIndexes}) // Preserve existing indexes
+      
+      setCurrentImageIndexes(indexes)
+    }
+  }, [projects, currentImageIndexes])
 
   const nextImage = (projectId: string, totalImages: number) => {
     setCurrentImageIndexes(prev => ({
@@ -70,7 +75,7 @@ export default function Portfolio() {
   }
 
   const nextLightboxImage = () => {
-    const project = projects.find(p => p.id === lightbox.projectId)
+    const project = projects.find((p: Project) => p.id === lightbox.projectId)
     if (project) {
       setLightbox(prev => ({
         ...prev,
@@ -80,7 +85,7 @@ export default function Portfolio() {
   }
 
   const prevLightboxImage = () => {
-    const project = projects.find(p => p.id === lightbox.projectId)
+    const project = projects.find((p: Project) => p.id === lightbox.projectId)
     if (project) {
       setLightbox(prev => ({
         ...prev,
@@ -102,18 +107,18 @@ export default function Portfolio() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
+          {projects.map((project: Project) => (
             <div key={project.id} className="portfolio-card rounded-lg transition-all duration-400 hover:translate-y-[-10px]" style={{ background: 'var(--background-color-1)', boxShadow: 'var(--shadow-1)', fontFamily: 'var(--font-primary)' }}>
               <div className="relative h-48 overflow-hidden group">
-                {project.images && project.images.length > 0 && (
+                {project.images && project.images.length > 0 && currentImageIndexes[project.id] !== undefined && (
                   <>
                     <Image
-                      src={project.images[currentImageIndexes[project.id]]}
+                      src={project.images[currentImageIndexes[project.id]] || ''}
                       alt={project.title}
                       fill
                       className="object-cover transition-transform duration-400"
-                      loading="lazy" // Add lazy loading
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Add responsive sizes
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <div 
                       className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
@@ -225,7 +230,15 @@ export default function Portfolio() {
           >
             →
           </button>
-          {projects.find(p => p.id === lightbox.projectId)?.images.map((image, index) => (
+          <button
+            aria-label="Next image"
+            onClick={nextLightboxImage}
+            onKeyDown={(e: React.KeyboardEvent) => e.key === 'Enter' && nextLightboxImage()}
+            tabIndex={0}
+          >
+            {/* button content */}
+          </button>
+          {projects.find((p: Project) => p.id === lightbox.projectId)?.images.map((image: string, index: number) => (
             <div
               key={index}
               className={`transition-opacity duration-300 ${
@@ -242,7 +255,7 @@ export default function Portfolio() {
             </div>
           ))}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {projects.find(p => p.id === lightbox.projectId)?.images.map((_, index) => (
+            {projects.find((p: Project) => p.id === lightbox.projectId)?.images.map((_: string, index: number) => (
               <button
                 key={index}
                 onClick={() => setLightbox(prev => ({ ...prev, currentIndex: index }))}

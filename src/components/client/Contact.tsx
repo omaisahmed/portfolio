@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'  // Fix: Changed from 'next/link' to 'next/image'
-import Link from 'next/link'
+import { useContacts } from '@/lib/hooks/useData'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -21,25 +20,8 @@ declare global {
   }
 }
 
-interface ContactInfo {
-  id: string
-  image?: string
-  name: string
-  title: string
-  email: string
-  phone: string
-  description: string
-  githubUrl?: string
-  linkedinUrl?: string
-  facebookUrl?: string
-  instagramUrl?: string
-  whatsappNumber?: string
-  twitterUrl?: string
-}
-
 export default function Contact() {
-  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { data: contact, error, isLoading } = useContacts()
   const [formData, setFormData] = useState({
     'contact-name': '',
     'contact-email': '',
@@ -51,21 +33,6 @@ export default function Contact() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   useEffect(() => {
-    const fetchContactInfo = async () => {
-      try {
-        const response = await fetch('/api/contact')
-        if (!response.ok) throw new Error('Failed to fetch contact information')
-        const data = await response.json()
-        setContactInfo(data)
-      } catch (error) {
-        console.error('Error fetching contact information:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchContactInfo()
-
     // Load EmailJS script
     const script = document.createElement('script')
     script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js'
@@ -73,7 +40,6 @@ export default function Contact() {
     document.body.appendChild(script)
 
     script.onload = () => {
-      // Initialize EmailJS
       window.emailjs.init('_gICZbeyFCiOD47uR')
     }
 
@@ -158,7 +124,7 @@ export default function Contact() {
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <section id="contact" className="py-20" style={{ background: 'var(--background-color-1)' }}>
         <div className="max-w-6xl mx-auto px-4">
@@ -168,9 +134,18 @@ export default function Contact() {
     )
   }
 
-  if (!contactInfo) {
-    return null
+  if (error) {
+    return (
+      <section id="contact" className="py-20" style={{ background: 'var(--background-color-1)' }}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center">Error loading contact information</div>
+        </div>
+      </section>
+    )
   }
+
+  if (!contact) return null
+
   return (
     <section id="contact" className="py-20" style={{ background: 'var(--background-color-1)' }}>
       <ToastContainer
@@ -198,42 +173,42 @@ export default function Contact() {
           {/* Contact Info */}
           <div className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
             <div className="items-center space-x-4 mb-6">
-              {contactInfo?.image && (
+              {contact?.image && (
                 <div className="overflow-hidden border-2 border-[var(--color-primary)] rounded-lg">
-                  <img src={contactInfo.image} alt={contactInfo.name} className="w-full h-full object-cover" />
+                  <img src={contact.image} alt={contact.name} className="w-full h-full object-cover" />
                 </div>
               )}
               <div className='mt-5'>
-                <h3 className="text-xl font-bold" style={{ color: 'var(--color-heading)' }}>{contactInfo?.name}</h3>
-                <p style={{ color: 'var(--color-body)' }}>{contactInfo?.title}</p>
+                <h3 className="text-xl font-bold" style={{ color: 'var(--color-heading)' }}>{contact?.name}</h3>
+                <p style={{ color: 'var(--color-body)' }}>{contact?.title}</p>
               </div>
             </div>
 
-            <p className="mb-6" style={{ color: 'var(--color-body)' }}>{contactInfo?.description}</p>
+            <p className="mb-6" style={{ color: 'var(--color-body)' }}>{contact?.description}</p>
 
             <div className="space-y-4 mb-6">
               <div className="flex items-center space-x-3">
                 <span className="w-10 h-10 flex items-center justify-center rounded-lg" style={{ background: 'var(--background-color-1)', color: 'var(--color-primary)' }}>
                   📧
                 </span>
-                <a href={`mailto:${contactInfo?.email}`} style={{ color: 'var(--color-body)' }} className="hover:text-[var(--color-primary)]">
-                  {contactInfo?.email}
+                <a href={`mailto:${contact?.email}`} style={{ color: 'var(--color-body)' }} className="hover:text-[var(--color-primary)]">
+                  {contact?.email}
                 </a>
               </div>
               <div className="flex items-center space-x-3">
                 <span className="w-10 h-10 flex items-center justify-center rounded-lg" style={{ background: 'var(--background-color-1)', color: 'var(--color-primary)' }}>
                   📱
                 </span>
-                <a href={`tel:${contactInfo?.phone}`} style={{ color: 'var(--color-body)' }} className="hover:text-[var(--color-primary)]">
-                  {contactInfo?.phone}
+                <a href={`tel:${contact?.phone}`} style={{ color: 'var(--color-body)' }} className="hover:text-[var(--color-primary)]">
+                  {contact?.phone}
                 </a>
               </div>
             </div>
 
             <div className="flex space-x-3">
-              {contactInfo?.githubUrl && (
+              {contact?.githubUrl && (
                 <a 
-                  href={contactInfo.githubUrl} 
+                  href={contact.githubUrl} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-10 h-10 flex items-center justify-center rounded-lg hover:text-[var(--color-primary)]"
@@ -242,9 +217,9 @@ export default function Contact() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
                 </a>
               )}
-              {contactInfo?.linkedinUrl && (
+              {contact?.linkedinUrl && (
                 <a 
-                  href={contactInfo.linkedinUrl} 
+                  href={contact.linkedinUrl} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-10 h-10 flex items-center justify-center rounded-lg hover:text-[var(--color-primary)]"
@@ -253,9 +228,9 @@ export default function Contact() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
                 </a>
               )}
-              {contactInfo?.twitterUrl && (
+              {contact?.twitterUrl && (
                 <a 
-                  href={contactInfo.twitterUrl} 
+                  href={contact.twitterUrl} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-10 h-10 flex items-center justify-center rounded-lg hover:text-[var(--color-primary)]"
@@ -264,9 +239,9 @@ export default function Contact() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
                 </a>
               )}
-              {contactInfo?.facebookUrl && (
+              {contact?.facebookUrl && (
                 <a 
-                  href={contactInfo.facebookUrl} 
+                  href={contact.facebookUrl} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-10 h-10 flex items-center justify-center rounded-lg hover:text-[var(--color-primary)]"
@@ -275,9 +250,9 @@ export default function Contact() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
                 </a>
               )}
-              {contactInfo?.instagramUrl && (
+              {contact?.instagramUrl && (
                 <a 
-                  href={contactInfo.instagramUrl} 
+                  href={contact.instagramUrl} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-10 h-10 flex items-center justify-center rounded-lg hover:text-[var(--color-primary)]"
@@ -286,9 +261,9 @@ export default function Contact() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                 </a>
               )}
-              {contactInfo?.whatsappNumber && (
+              {contact?.whatsappNumber && (
                 <a 
-                  href={`https://wa.me/${contactInfo.whatsappNumber}`} 
+                  href={`https://wa.me/${contact.whatsappNumber}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-10 h-10 flex items-center justify-center rounded-lg hover:text-[var(--color-primary)]"

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTestimonials } from '@/lib/hooks/useData'
 
 interface Testimonial {
   id: string
@@ -11,38 +12,18 @@ interface Testimonial {
 }
 
 export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const { data: testimonials, error, isLoading } = useTestimonials()
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div className="text-lg" style={{ color: 'var(--color-heading)' }}>Loading testimonials...</div>
+      </div>
+    )
+  }
 
-  useEffect(() => {
-    fetch('/api/testimonials')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setTestimonials(data)
-        } else if (data.error) {
-          console.error('API Error:', data.error)
-        }
-        setIsLoading(false)
-      })
-      .catch(error => {
-        console.error('Error fetching testimonials:', error)
-        setIsLoading(false)
-      })
-  }, [])
-
-  useEffect(() => {
-    if (testimonials.length === 0) return
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
-        prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-      )
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [testimonials.length])
+  if (error) return <div>Error loading testimonials</div>
+  if (!testimonials || testimonials.length === 0) return null
 
   if (isLoading) {
     return (
@@ -104,7 +85,7 @@ export default function Testimonials() {
             </div>
           </div>
           <div className="flex justify-center mt-8 gap-2">
-            {testimonials.map((_, index) => (
+            {testimonials.map((_: Testimonial, index: number) => (
               <button
                 key={index}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${

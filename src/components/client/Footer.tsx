@@ -2,8 +2,15 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSettings } from '@/lib/hooks/useData'
 
 export default function Footer() {
+  const { data: settings, error, isLoading } = useSettings()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error loading footer</div>
+  if (!settings) return null
+
   return (
     <footer className="py-8" style={{ background: 'var(--background-color-2)' }}>
       <div className="max-w-6xl mx-auto px-4">
@@ -17,14 +24,16 @@ export default function Footer() {
         >
           <div className="mb-6">
             <Link href="/" className="text-2xl font-bold" style={{ color: 'var(--color-heading)' }}>
-              <Image 
-                src="/assets/images/logo.png" 
-                alt="Logo" 
-                width={120} 
-                height={40}
-                className="object-contain mx-auto"
-                priority
-              />
+              {settings.logo_image && (
+                <Image 
+                  src={settings.logo_image}
+                  alt="Logo" 
+                  width={120} 
+                  height={40}
+                  className="object-contain mx-auto"
+                  priority
+                />
+              )}
             </Link>
           </div>
           <div className="flex flex-wrap justify-center gap-4 mb-6">
@@ -65,7 +74,7 @@ export default function Footer() {
             </Link>
           </div>
           <p style={{ color: 'var(--color-body)' }}>
-            © {new Date().getFullYear()}. All rights reserved.
+            {settings.copyright}
           </p>
         </div>
       </div>

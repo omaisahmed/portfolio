@@ -1,6 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { 
+  useEducation,
+  useExperience,
+  useSkills,
+  useCertifications
+} from '@/lib/hooks/useData'
 
 interface Education {
   id: string
@@ -31,47 +37,31 @@ interface Experience {
   id: string
   title: string
   company: string
-  location: string
   startDate: string
   endDate: string
   current: boolean
-  description: string
 }
 
 export default function Resume() {
   const [activeTab, setActiveTab] = useState('education')
-  const [data, setData] = useState<{
-    education: Education[]
-    certifications: Certification[]
-    professional: Skill[]
-    experience: Experience[]
-  }>({
-    education: [],
-    certifications: [],
-    professional: [],
-    experience: []
-  })
-  const [loading, setLoading] = useState(true)
+  const { data: education = [], isLoading: educationLoading } = useEducation()
+  const { data: certifications = [], isLoading: certificationsLoading } = useCertifications()
+  const { data: professional = [], isLoading: skillsLoading } = useSkills()
+  const { data: experience = [], isLoading: experienceLoading } = useExperience()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const endpoint = activeTab === 'professional' ? 'skill' : 
-                        activeTab === 'certifications' ? 'certification' : activeTab
-        const response = await fetch(`/api/resume/${endpoint}`)
-        if (!response.ok) throw new Error('Failed to fetch data')
-        const items = await response.json()
-        setData(prev => ({ ...prev, [activeTab]: items }))
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  const loading = {
+    education: educationLoading,
+    certifications: certificationsLoading,
+    professional: skillsLoading,
+    experience: experienceLoading
+  }
 
-    fetchData()
-  }, [activeTab])
+  const data = {
+    education,
+    certifications,
+    professional,
+    experience
+  }
 
   return (
     <section id="resume" className="py-20" style={{ background: 'var(--background-color-1)' }}>
@@ -133,14 +123,14 @@ export default function Resume() {
             className={`${activeTab === 'education' ? 'block' : 'hidden'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {loading ? (
+              {loading[activeTab as keyof typeof loading] ? (
                 <div>Loading...</div>
-              ) : data.education.map((edu) => (
-                <div key={edu.id} className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
-                  <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>{edu.degree}</h3>
-                  <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>
+              ) : data[activeTab as keyof typeof data].map((edu: Education) => (
+                <div key={edu.id} className="p-6 rounded-lg relative" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
+                  <p className="text-sm absolute top-6 right-6" style={{ color: 'var(--color-subtitle)' }}>
                     {new Date(edu.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {new Date(edu.endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
+                  <h3 className="text-xl font-bold mb-2 pr-48" style={{ color: 'var(--color-heading)' }}>{edu.degree}</h3>
                   <p style={{ color: 'var(--color-body)' }}>{edu.institution}</p>
                   {edu.field && <p style={{ color: 'var(--color-body)' }}>{edu.field}</p>}
                   {edu.gpa && <p style={{ color: 'var(--color-body)' }}>GPA: {edu.gpa}</p>}
@@ -156,14 +146,14 @@ export default function Resume() {
             className={`${activeTab === 'certifications' ? 'block' : 'hidden'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {loading ? (
+              {loading[activeTab as keyof typeof loading] ? (
                 <div>Loading...</div>
-              ) : data.certifications.map((cert) => (
-                <div key={cert.id} className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
-                  <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>{cert.name}</h3>
-                  <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>
+              ) : data[activeTab as keyof typeof data].map((cert: Certification) => (
+                <div key={cert.id} className="p-6 rounded-lg relative" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
+                  <p className="text-sm absolute top-6 right-6" style={{ color: 'var(--color-subtitle)' }}>
                     {new Date(cert.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {cert.expiryDate ? new Date(cert.expiryDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'No Expiry'}
                   </p>
+                  <h3 className="text-xl font-bold mb-2 pr-48" style={{ color: 'var(--color-heading)' }}>{cert.name}</h3>
                   <p style={{ color: 'var(--color-body)' }}>{cert.issuer}</p>
                 </div>
               ))}
@@ -177,24 +167,51 @@ export default function Resume() {
             className={`${activeTab === 'professional' ? 'block' : 'hidden'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                {loading ? (
-                  <div>Loading...</div>
-                ) : data.professional.map((skill) => (
-                  <div key={skill.id} className="skill-item">
-                    <div className="flex justify-between mb-2">
-                      <span style={{ color: 'var(--color-heading)' }}>{skill.name}</span>
-                      <span style={{ color: 'var(--color-primary)' }}>{skill.level}%</span>
-                    </div>
-                    <div className="h-2 bg-[var(--background-color-2)] rounded-full">
-                      <div 
-                        className="h-full bg-[var(--color-primary)] rounded-full" 
-                        style={{ width: `${skill.level}%` }}
-                      ></div>
-                    </div>
+              {loading.professional ? (
+                <div>Loading...</div>
+              ) : (
+                <>
+                  {/* Left Column */}
+                  <div className="space-y-4">
+                    {data.professional
+                      .filter((_: any, index: number) => index % 2 === 0)
+                      .map((skill: Skill) => (
+                        <div key={skill.id} className="skill-item">
+                          <div className="flex justify-between mb-2">
+                            <span style={{ color: 'var(--color-heading)' }}>{skill.name}</span>
+                            <span style={{ color: 'var(--color-primary)' }}>{skill.level}%</span>
+                          </div>
+                          <div className="h-2 bg-[var(--background-color-2)] rounded-full">
+                            <div 
+                              className="h-full bg-[var(--color-primary)] rounded-full" 
+                              style={{ width: `${skill.level}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                  
+                  {/* Right Column */}
+                  <div className="space-y-4">
+                    {data.professional
+                      .filter((_: any, index: number) => index % 2 === 1)
+                      .map((skill: Skill) => (
+                        <div key={skill.id} className="skill-item">
+                          <div className="flex justify-between mb-2">
+                            <span style={{ color: 'var(--color-heading)' }}>{skill.name}</span>
+                            <span style={{ color: 'var(--color-primary)' }}>{skill.level}%</span>
+                          </div>
+                          <div className="h-2 bg-[var(--background-color-2)] rounded-full">
+                            <div 
+                              className="h-full bg-[var(--color-primary)] rounded-full" 
+                              style={{ width: `${skill.level}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -205,17 +222,15 @@ export default function Resume() {
             className={`${activeTab === 'experience' ? 'block' : 'hidden'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {loading ? (
+              {loading.experience ? (
                 <div>Loading...</div>
-              ) : data.experience.map((exp) => (
-                <div key={exp.id} className="p-6 rounded-lg" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
-                  <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-heading)' }}>{exp.title}</h3>
-                  <p className="text-sm mb-2" style={{ color: 'var(--color-subtitle)' }}>
+              ) : data.experience.map((exp: Experience) => (
+                <div key={exp.id} className="p-6 rounded-lg relative" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
+                  <p className="text-sm absolute top-6 right-6" style={{ color: 'var(--color-subtitle)' }}>
                     {new Date(exp.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {exp.current ? 'Present' : new Date(exp.endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
+                  <h3 className="text-xl font-bold mb-2 pr-48" style={{ color: 'var(--color-heading)' }}>{exp.title}</h3>
                   <p style={{ color: 'var(--color-body)' }}>{exp.company}</p>
-                  {exp.location && <p style={{ color: 'var(--color-body)' }}>{exp.location}</p>}
-                  <p className="mt-2" style={{ color: 'var(--color-body)' }}>{exp.description}</p>
                 </div>
               ))}
             </div>

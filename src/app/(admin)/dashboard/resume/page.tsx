@@ -37,11 +37,9 @@ interface Experience {
   id: string
   title: string
   company: string
-  location: string
   startDate: string
   endDate: string
   current: boolean
-  description: string
 }
 
 type ResumeData = {
@@ -174,11 +172,9 @@ export default function ResumePage() {
           <>
             <h3 className="font-medium text-black">{exp.title}</h3>
             <p className="text-gray-600">{exp.company}</p>
-            <p className="text-sm text-gray-500">{exp.location}</p>
             <p className="text-sm text-gray-500">
               {new Date(exp.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {exp.current ? 'Present' : new Date(exp.endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
-            <p className="mt-2 text-gray-600">{exp.description}</p>
           </>
         )
 

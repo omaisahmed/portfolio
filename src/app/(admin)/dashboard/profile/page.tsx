@@ -18,7 +18,6 @@ interface Profile {
   whatsappNumber?: string
   twitterUrl?: string
   personalWebsite?: string
-  // Add any other new fields here
 }
 
 export default function ProfilePage() {

@@ -34,7 +34,6 @@ interface Experience {
   startDate: string
   endDate?: string  // Make it optional here too
   current: boolean
-  description: string
 }
 
 interface ResumeFormProps {
@@ -125,7 +124,6 @@ export default function ResumeForm({ type, data, onSuccess }: ResumeFormProps) {
           startDate: formData.get('startDate'),
           endDate: isCurrent ? undefined : formData.get('endDate')?.toString(),  // Use undefined instead of null
           current: isCurrent,
-          description: formData.get('description')
         }
         break
     }

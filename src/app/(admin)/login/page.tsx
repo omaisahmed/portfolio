@@ -34,7 +34,7 @@ export default function LoginPage() {
         setTimeout(() => {
           router.push('/dashboard')
           router.refresh()
-        }, 1500) // Give time for the toast to show
+        }, 100) // Give time for the toast to show
       }
     } catch (error) {
       setError('An error occurred during login')
@@ -46,7 +46,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={100}
         hideProgressBar={false}
         newestOnTop
         closeOnClick
@@ -87,7 +87,7 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-[var(--color-subtitle)] text-white py-2 px-4 rounded hover:opacity-90 transition-opacity"
+            className="w-full bg-[var(--color-subtitle)] text-white py-2 px-4 rounded hover:opacity-90 transition-opacity cursor-pointer"
           >
             Sign In
           </button>
