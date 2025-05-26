@@ -11,6 +11,7 @@ export default function Header() {
   const { data: profile, error, isLoading } = useProfile()
   const [settings, setSettings] = useState({ logo_image: '' })
   const { data: settingsData } = useSettings()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     if (settingsData) {
@@ -78,6 +79,21 @@ export default function Header() {
     }
   }, [])
 
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isMobileMenuOpen && !target.closest('.mobile-menu') && !target.closest('.menu-toggle')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <header className="min-h-screen" style={{ background: 'var(--background-color-2)' }}>
       <nav 
@@ -101,7 +117,18 @@ export default function Header() {
                 />
               )}
             </Link>
-            {/* Modified menu for mobile responsiveness */}
+            
+            {/* Mobile menu toggle button */}
+            <button 
+              className="md:hidden menu-toggle text-2xl"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+              style={{ color: 'var(--color-lightn)' }}
+            >
+              {isMobileMenuOpen ? '✕' : '☰'}
+            </button>
+            
+            {/* Desktop menu */}
             <div className="hidden md:flex space-x-8 flex-wrap">
               <Link 
                 href="#services"
@@ -142,6 +169,86 @@ export default function Header() {
           </div>
         </div>
       </nav>
+      
+      {/* Mobile sidebar menu */}
+      <div 
+        className={`mobile-menu fixed top-0 right-0 h-full w-64 z-50 transform transition-transform duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        style={{ 
+          background: 'var(--background-color-1)',
+          boxShadow: 'var(--shadow-1)'
+        }}
+      >
+        <div className="p-6">
+          <button 
+            className="text-2xl mb-8 block ml-auto"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close menu"
+            style={{ color: 'var(--color-lightn)' }}
+          >
+            ✕
+          </button>
+          
+          <div className="flex flex-col space-y-6">
+            <Link 
+              href="#services"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400 flex items-center"
+              style={{ color: 'var(--color-lightn)' }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Services
+            </Link>
+            <Link 
+              href="#portfolio"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400 flex items-center"
+              style={{ color: 'var(--color-lightn)' }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              Portfolio
+            </Link>
+            <Link 
+              href="#resume"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400 flex items-center"
+              style={{ color: 'var(--color-lightn)' }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Resume
+            </Link>
+            <Link 
+              href="#testimonials"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400 flex items-center"
+              style={{ color: 'var(--color-lightn)' }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              Testimonials
+            </Link>
+            <Link 
+              href="#contact"
+              className="hover:text-[var(--color-primary)] transition-colors duration-400 flex items-center"
+              style={{ color: 'var(--color-lightn)' }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Contact Me
+            </Link>
+          </div>
+        </div>
+      </div>
 
       <div className="w-full px-4 flex items-center min-h-screen" style={{ background: 'var(--background-color-2)' }}>
         <div className="container mx-auto">
@@ -152,7 +259,7 @@ export default function Header() {
               transition={{ duration: 0.8 }}
               className="pt-20 md:pt-0" // Added padding for mobile
             >
-              <div className="content pt-16 md:pt-1"> {/* Increased padding top for mobile */}
+              <div className="content pt-8 md:pt-16"> {/* Reduced padding top for mobile, kept original for desktop */}
                 <span className="text-lg mb-4 block flex items-center gap-2" style={{ color: '#c4cfde', fontFamily: 'var(--font-primary)' }}>
                   Welcome to my portfolio! 
                   <Image src="/assets/icons/hello.gif" alt="hello" width={30} height={30} />
