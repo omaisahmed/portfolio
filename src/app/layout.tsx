@@ -10,9 +10,8 @@ export const metadata: Metadata = {
   viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
   icons: {
     icon: [
-      { url: '/assets/images/favicon.png', sizes: 'any', type: 'image/png' }
+      { url: '/assets/images/favicon.png', type: 'image/png' }
     ],
-    shortcut: '/assets/images/favicon.png',
     apple: '/assets/images/favicon.png'
   }
 };
