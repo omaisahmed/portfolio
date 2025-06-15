@@ -155,15 +155,15 @@ export default function Resume() {
                 <div>Loading...</div>
               ) : data[activeTab as keyof typeof data].map((cert: Certification) => (
                 <div key={cert.id} className="p-6 rounded-lg relative" style={{ background: 'var(--background-color-2)', boxShadow: 'var(--shadow-1)' }}>
-                  <div className="flex flex-col mb-4 md:hidden" style={{ color: 'var(--color-subtitle)' }}>
-                    <span className="text-sm">
-                      {new Date(cert.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {cert.expiryDate ? new Date(cert.expiryDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'No Expiry'}
+                  <div className="block mb-4 md:hidden" style={{ color: 'var(--color-subtitle)' }}>
+                    <span className="text-sm inline-block">
+                      {new Date(cert.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}{cert.expiryDate && ` - ${new Date(cert.expiryDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}
                     </span>
                   </div>
                   <p className="text-sm absolute top-6 right-6 hidden md:block" style={{ color: 'var(--color-subtitle)' }}>
-                    {new Date(cert.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} - {cert.expiryDate ? new Date(cert.expiryDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'No Expiry'}
+                    {new Date(cert.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}{cert.expiryDate && ` - ${new Date(cert.expiryDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}
                   </p>
-                  <h3 className="text-xl font-bold mb-2 md:pr-48" style={{ color: 'var(--color-heading)' }}>{cert.name}</h3>
+                  <h3 className="text-xl font-bold mb-2 pr-0 md:pr-48" style={{ color: 'var(--color-heading)' }}>{cert.name}</h3>
                   <p style={{ color: 'var(--color-body)' }}>{cert.issuer}</p>
                 </div>
               ))}
